@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supportive_ai/Screens/home_page/widgets/nav_bar.dart';
 
 
 void main() {
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      home:  null,
+      home:  NavBar(),
     );
   }
 }
