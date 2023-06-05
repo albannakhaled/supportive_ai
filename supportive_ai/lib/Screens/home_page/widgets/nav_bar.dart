@@ -7,14 +7,14 @@ class NavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: Container(
-        color: Colors.green,
+        color: const Color(0xFF6F35A5),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 14, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 20),
           child: GNav(
-              backgroundColor: Colors.green,
+              backgroundColor: const Color(0xFF6F35A5),
               gap: 8,
-              color: Colors.white,
-              activeColor: Colors.white,
+              color: const Color(0xFFF1E6FF),
+              activeColor: const Color(0xFFF1E6FF),
               tabBackgroundColor: Colors.white24,
               onTabChange: (index) {
                 //print(index);
@@ -36,7 +36,8 @@ class NavBar extends StatelessWidget {
                   text: 'Profile',
                   onPressed: () {},
                 ),
-              ]),
+              ],
+              ),
         ),
       ),
     );
