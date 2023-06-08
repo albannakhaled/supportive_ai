@@ -147,7 +147,7 @@ class _SignUpState extends State<SignUp> {
                       const SizedBox(height: 15),
 
                       // sign in button
-                      MyButton(onTap: () {}, text: "Sign Up"),
+                      MyButton(onPressed: () {}, text: "Sign Up"),
                       const SizedBox(height: 10),
                       GestureDetector(
                         onTap: () {

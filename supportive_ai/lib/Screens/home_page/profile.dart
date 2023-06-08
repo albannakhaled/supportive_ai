@@ -120,13 +120,18 @@ class _ProfileState extends State<Profile> {
                   fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 8),
-            SizedBox(
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                color: Colors.white70,
+              ),
               height: 300,
               child: ListView.builder(
                 itemCount: listNames.length,
                 itemBuilder: (context, index) {
                   return Card(
-                    elevation: 7,
+                    elevation: 3,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(19)),
                     clipBehavior: Clip.hardEdge,

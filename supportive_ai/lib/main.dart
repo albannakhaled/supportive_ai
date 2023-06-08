@@ -5,6 +5,8 @@ import 'package:supportive_ai/Screens/sign_in/sign_in.dart';
 import 'package:supportive_ai/Screens/sign_up/sign_up.dart';
 import 'package:supportive_ai/Screens/splash/splash.dart';
 
+import 'Screens/home_page/chat.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -19,14 +21,16 @@ class MyApp extends StatelessWidget {
       routes: {
         'signup': (context) => SignUp(),
         'signin': (context) => SignIn(),
+        'chat': (context) => ChatBotScreen(),
         'profile': (context) => Profile(),
+        'home': (context) => NavBar(),
       },
       theme: ThemeData(
         primaryColor: const Color.fromARGB(255, 69, 7, 105),
       ),
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      home: NavBar(),
+      home: SplashScreen(),
     );
   }
 }

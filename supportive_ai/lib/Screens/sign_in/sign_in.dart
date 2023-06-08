@@ -72,7 +72,9 @@ class _SignInState extends State<SignIn> {
                         SizedBox(height: screenHeight * 0.05),
                         SizedBox(
                           height: screenHeight * 0.07,
-                          child: MyButton(onTap: () {}, text: "Sign In"),
+                          child: MyButton(onPressed: () {
+                            Navigator.pushNamed(context, 'home');
+                          }, text: "Sign In"),
                         ),
                         // go to register page
                         const SizedBox(
