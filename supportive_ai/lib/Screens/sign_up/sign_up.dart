@@ -155,10 +155,15 @@ class _SignUpState extends State<SignUp> {
                         },
                         child: const Row(
                           children: [
-                            Icon(Icons.arrow_back),
+                            Icon(
+                              Icons.arrow_back,
+                              color: Colors.purple,
+                            ),
                             Text(
                               "Back to Sign IN",
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blueGrey),
                             ),
                           ],
                         ),

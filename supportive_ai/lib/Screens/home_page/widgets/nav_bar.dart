@@ -34,7 +34,9 @@ class NavBar extends StatelessWidget {
                 GButton(
                   icon: Icons.person,
                   text: 'Profile',
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, 'profile');
+                  },
                 ),
               ],
               ),

@@ -29,7 +29,7 @@ class MyButton extends StatelessWidget {
         onPressed: () {
           // Button action
         },
-        child: const Text('Sign In'),
+        child: Text(text),
       ),
     );
   }
