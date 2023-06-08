@@ -10,29 +10,33 @@ class MyTextField extends StatelessWidget {
     required this.controller,
     required this.hintText,
     required this.obscureText,
-    required this.icon, 
+    required this.icon,
     final String? Function(dynamic value)? validator,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextField(
-      // autofocus: true,
-
       controller: controller,
       obscureText: obscureText,
+      cursorColor: Colors.blueGrey,
       decoration: InputDecoration(
-        prefixIcon: icon,
-        enabledBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
-        ),
-        fillColor: Colors.grey.shade300,
-        filled: true,
-        hintText: hintText,
-        hintStyle: TextStyle(
-          color: Colors.grey[500],
-        ),
-      ),
+          prefixIcon: icon,
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(style: BorderStyle.none),
+          ),
+          fillColor: Colors.grey.shade300,
+          filled: true,
+          hintText: hintText,
+          hintStyle: TextStyle(
+            color: Colors.grey[500],
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(color: Colors.purple, width: 1.2),
+          ),
+          prefixIconColor: Colors.grey),
     );
   }
 }
