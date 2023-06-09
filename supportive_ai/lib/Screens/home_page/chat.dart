@@ -16,14 +16,33 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
     });
 
     // Simulating bot's response
+    String botResponse = getBotResponse(text);
+
     Future.delayed(Duration(seconds: 1), () {
       setState(() {
-        messages
-            .add(Message(text: 'This is the bot\'s response', isUser: false));
+        messages.add(Message(text: botResponse, isUser: false));
       });
     });
 
     messageController.clear();
+  }
+
+  String getBotResponse(String userMessage) {
+    // Logic for generating bot response based on user message
+    // Replace this with your own chat bot model or API integration
+
+    // Example rule-based model
+    if (userMessage.toLowerCase().contains('hello')) {
+      return 'Hi there!';
+    } else if (userMessage.toLowerCase().contains('how are you')) {
+      return 'I am good, thank you!';
+    } else if (userMessage.toLowerCase().contains('nfe5o')) {
+      return 'mafi 8ayrak byenef5o';
+    } else if (userMessage.toLowerCase().contains('wle 3eb')) {
+      return 'tayyeb ok';
+    } else {
+      return 'I am sorry, I cannot understand that.';
+    }
   }
 
   @override
