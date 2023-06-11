@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
         'home': (context) => NavBar(),
       },
       theme: ThemeData(
+        primarySwatch: Colors.purple,
         primaryColor: const Color.fromARGB(255, 69, 7, 105),
       ),
       debugShowCheckedModeBanner: false,

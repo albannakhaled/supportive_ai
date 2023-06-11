@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:supportive_ai/Screens/sign_in/widgets/button.dart';
 import 'package:supportive_ai/Screens/sign_in/widgets/text_field.dart';
 import 'package:supportive_ai/responsive.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -14,6 +16,22 @@ class _SignInState extends State<SignIn> {
   // text editing controller
   final emailTextController = TextEditingController();
   final passwordTextController = TextEditingController();
+  void loginUser(String username,String password)async{
+  var url = Uri.parse('http://127.0.0.1:8000/login/');
+  var body = jsonEncode({
+    'username':'$username',
+    'password':'$password',
+  });
+  var headers = {'Content-Type':'application/json'};
+  var response = await http.post(url,body:body,headers:headers);
+  if(response.statusCode == 200){
+    print("login success");
+    Navigator.pushNamed(context, 'home');
+  }else{
+    print('registration fialed : ${response.statusCode}');
+    print('response body: ${response.body}');
+  }
+}
   @override
   Widget build(BuildContext context) {
     final screenHeight =
@@ -92,7 +110,8 @@ class _SignInState extends State<SignIn> {
                             const SizedBox(width: 10),
                             GestureDetector(
                               onTap: () {
-                                Navigator.pushNamed(context, 'signup');
+                                loginUser('$emailTextController','$passwordTextController');
+
                               },
                               child: const Text(
                                 "Register Now",

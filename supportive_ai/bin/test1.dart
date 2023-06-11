@@ -7,8 +7,8 @@ void main()
 void loginUser()async{
   var url = Uri.parse('http://127.0.0.1:8000/login/');
   var body = jsonEncode({
-    'username':'',
-    'password':'',
+    'username':'test',
+    'password':'Password confirmation:',
   });
   var headers = {'Content-Type':'application/json'};
   var response = await http.post(url,body:body,headers:headers);
