@@ -9,6 +9,16 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   final listNames = const ['ahmad', 'khaled', 'ali', 'sami', 'chadi'];
+  void showDate() {
+    showDatePicker(
+      
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2050),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,7 +26,7 @@ class _ProfileState extends State<Profile> {
         backgroundColor: Colors.purple,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: showDate,
             icon: const Icon(Icons.calendar_month),
           )
         ],
