@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:supportive_ai/Screens/sign_in/widgets/button.dart';
 import 'package:supportive_ai/Screens/sign_in/widgets/text_field.dart';
 import 'package:supportive_ai/responsive.dart';
+import 'package:supportive_ai/services/auth.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -11,16 +12,19 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  String dropdownvalue = 'Patient';
+  var items = ['Patient', 'Doctor'];
+  SignUpAuth signauth = SignUpAuth();
   // text editing controller
-  final nameTextController = TextEditingController();
-  final passwordTextController = TextEditingController();
-  final confirmPasswordTextController = TextEditingController();
-  final userNameTextController = TextEditingController();
-  final phoneTextController = TextEditingController();
-  final addressTextController = TextEditingController();
-  final emailTextController = TextEditingController();
-  final dobTextController = TextEditingController();
-
+  final username = TextEditingController();
+  final password = TextEditingController();
+  final name = TextEditingController();
+  final email = TextEditingController();
+  final phoneNumber = TextEditingController();
+  final location_city = TextEditingController();
+  // final patient_doctor = TextEditingController();
+  final gender = TextEditingController();
+  final birth = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final screenHeight =
@@ -55,12 +59,12 @@ class _SignUpState extends State<SignUp> {
                       // username filed
                       MyTextField(
                         icon: const Icon(Icons.person),
-                        controller: nameTextController,
-                        hintText: "Name",
+                        controller: username,
+                        hintText: "User name",
                         obscureText: false,
                         validator: (value) {
                           if (value.isEmpty) {
-                            return 'Please enter your name';
+                            return 'Please enter your username';
                           }
                           return null;
                         },
@@ -68,9 +72,9 @@ class _SignUpState extends State<SignUp> {
                       const SizedBox(height: 5),
                       MyTextField(
                         icon: const Icon(Icons.person_2),
-                        controller: userNameTextController,
-                        hintText: "Last name",
-                        obscureText: false,
+                        controller: password,
+                        hintText: "Password",
+                        obscureText: true,
                         validator: (value) {
                           if (value.isEmpty) {
                             return 'Please enter your last name';
@@ -81,9 +85,9 @@ class _SignUpState extends State<SignUp> {
                       const SizedBox(height: 5),
                       MyTextField(
                         icon: const Icon(Icons.password),
-                        controller: passwordTextController,
-                        hintText: "Password",
-                        obscureText: true,
+                        controller: name,
+                        hintText: "Name",
+                        obscureText: false,
                         validator: (value) {
                           if (value.isEmpty) {
                             return 'Please enter your password';
@@ -95,8 +99,8 @@ class _SignUpState extends State<SignUp> {
                       const SizedBox(height: 5),
                       MyTextField(
                         icon: const Icon(Icons.phone),
-                        controller: phoneTextController,
-                        hintText: "Phone Number",
+                        controller: email,
+                        hintText: "Email",
                         obscureText: false,
                         validator: (value) {
                           if (value.isEmpty) {
@@ -108,8 +112,8 @@ class _SignUpState extends State<SignUp> {
                       const SizedBox(height: 5),
                       MyTextField(
                         icon: const Icon(Icons.location_city),
-                        controller: addressTextController,
-                        hintText: "Address",
+                        controller: phoneNumber,
+                        hintText: "Phone number",
                         obscureText: false,
                         validator: (value) {
                           if (value.isEmpty) {
@@ -121,8 +125,8 @@ class _SignUpState extends State<SignUp> {
                       const SizedBox(height: 5),
                       MyTextField(
                         icon: const Icon(Icons.email),
-                        controller: emailTextController,
-                        hintText: "Email",
+                        controller: location_city,
+                        hintText: "Address",
                         obscureText: false,
                         validator: (value) {
                           if (value.isEmpty) {
@@ -132,10 +136,35 @@ class _SignUpState extends State<SignUp> {
                         },
                       ),
                       const SizedBox(height: 5),
+                      // dropdownbutton
+                      DropdownButton(
+                        // Initial Value
+                        value: dropdownvalue,
+
+                        // Down Arrow Icon
+                        icon: const Icon(Icons.keyboard_arrow_down),
+
+                        // Array list of items
+                        items: items.map((String items) {
+                          return DropdownMenuItem(
+                            value: items,
+                            child: Text(items),
+                          );
+                        }).toList(),
+                        // After selecting the desired option,it will
+                        // change button value to selected value
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            dropdownvalue = newValue!;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 15),
+
                       MyTextField(
                         icon: const Icon(Icons.date_range),
-                        controller: dobTextController,
-                        hintText: "Date Of Birth",
+                        controller: gender,
+                        hintText: "Gender",
                         obscureText: false,
                         validator: (value) {
                           if (value.isEmpty) {
@@ -145,9 +174,34 @@ class _SignUpState extends State<SignUp> {
                         },
                       ),
                       const SizedBox(height: 15),
+                      MyTextField(
+                        icon: const Icon(Icons.date_range),
+                        controller: birth,
+                        hintText: "Date of Birth",
+                        obscureText: false,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter your Birth';
+                          }
+                          return null;
+                        },
+                      ),
 
                       // sign in button
-                      MyButton(onPressed: () {}, text: "Sign Up"),
+                      MyButton(
+                          onPressed: () {
+                            signauth.signUpUser(
+                                '$username',
+                                '$password',
+                                '$name',
+                                '$email',
+                                '$phoneNumber',
+                                '$location_city',
+                                dropdownvalue,
+                                '$gender',
+                                '$birth');
+                          },
+                          text: "Sign Up"),
                       const SizedBox(height: 10),
                       GestureDetector(
                         onTap: () {

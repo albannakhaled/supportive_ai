@@ -5,6 +5,7 @@ import 'package:supportive_ai/responsive.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import '../home_page/home_page.dart';
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
 
@@ -13,25 +14,41 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-  // text editing controller
-  final emailTextController = TextEditingController();
-  final passwordTextController = TextEditingController();
-  void loginUser(String username,String password)async{
-  var url = Uri.parse('http://127.0.0.1:8000/login/');
-  var body = jsonEncode({
-    'username':'$username',
-    'password':'$password',
-  });
-  var headers = {'Content-Type':'application/json'};
-  var response = await http.post(url,body:body,headers:headers);
-  if(response.statusCode == 200){
-    print("login success");
-    Navigator.pushNamed(context, 'home');
-  }else{
-    print('registration fialed : ${response.statusCode}');
-    print('response body: ${response.body}');
+ final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  Future<void> login(String username, String password, BuildContext context) async {
+  final url = Uri.parse('http://127.0.0.1:8000/login/');
+
+  final response = await http.post(
+    url,
+    body: {'username': username, 'password': password},
+  );
+
+  if (response.statusCode == 200) {
+    final responseData = jsonDecode(response.body);
+    final String token = responseData['token'];
+
+    // Login successful, you can store the authentication token here
+    print('Logged in successfully! Token: $token');
+
+    // Navigate to the home page
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => HomePage()),
+    );
+  } else {
+    // Login failed, display an error message to the user
+    print('Login failed. Status code: ${response.statusCode}');
   }
 }
+
+  void _handleLogin(BuildContext context) {
+    final username = _usernameController.text;
+    final password = _passwordController.text;
+
+    login(username, password,context);
+  }
   @override
   Widget build(BuildContext context) {
     final screenHeight =
@@ -45,9 +62,7 @@ class _SignInState extends State<SignIn> {
           decoration: BoxDecoration(
               border: Border.all(color: Colors.white.withOpacity(0.13)),
               image: const DecorationImage(
-                  opacity: 80,
-                  image: AssetImage(""),
-                  fit: BoxFit.cover)),
+                  opacity: 80, image: AssetImage(""), fit: BoxFit.cover)),
           child: SingleChildScrollView(
             child: Padding(
               padding: EdgeInsets.symmetric(
@@ -74,14 +89,14 @@ class _SignInState extends State<SignIn> {
                         // username filed
                         MyTextField(
                             icon: const Icon(Icons.person),
-                            controller: emailTextController,
+                            controller: _usernameController,
                             hintText: "User name",
                             obscureText: false),
                         // password field
                         SizedBox(height: screenHeight * 0.05),
                         MyTextField(
                           icon: const Icon(Icons.password_outlined),
-                          controller: passwordTextController,
+                          controller: _passwordController,
                           hintText: "Password",
                           obscureText: true,
                         ),
@@ -90,9 +105,9 @@ class _SignInState extends State<SignIn> {
                         SizedBox(height: screenHeight * 0.05),
                         SizedBox(
                           height: screenHeight * 0.07,
-                          child: MyButton(onPressed: () {
-                            Navigator.pushNamed(context, 'home');
-                          }, text: "Sign In"),
+                          child: MyButton(
+                            onPressed: () => _handleLogin(context),
+                             text: "Sign In"),
                         ),
                         // go to register page
                         const SizedBox(
@@ -110,8 +125,7 @@ class _SignInState extends State<SignIn> {
                             const SizedBox(width: 10),
                             GestureDetector(
                               onTap: () {
-                                loginUser('$emailTextController','$passwordTextController');
-
+                                Navigator.pushNamed(context, 'signup');
                               },
                               child: const Text(
                                 "Register Now",
