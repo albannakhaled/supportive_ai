@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:supportive_ai/Screens/sign_in/widgets/button.dart';
 import 'package:supportive_ai/Screens/sign_in/widgets/text_field.dart';
 import 'package:supportive_ai/responsive.dart';
+import 'package:http/http.dart' as http;
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -12,14 +15,70 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   // text editing controller
-  final nameTextController = TextEditingController();
-  final passwordTextController = TextEditingController();
-  final confirmPasswordTextController = TextEditingController();
-  final userNameTextController = TextEditingController();
-  final phoneTextController = TextEditingController();
-  final addressTextController = TextEditingController();
-  final emailTextController = TextEditingController();
-  final dobTextController = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneNumberController = TextEditingController();
+  final _location_cityController = TextEditingController();
+  final _userTypeController = TextEditingController();
+  final _genderController = TextEditingController();
+  final _birthController = TextEditingController();
+
+  Future<void> register(
+    String username,
+    String password,
+    String name,
+    String phone,
+    String city,
+    String email,
+    String birth,
+    String gender,
+    String userType,
+  ) async {
+    final url = Uri.parse('http://127.0.0.1:8000/register/');
+
+    final response = await http.post(
+      url,
+      body: {
+        'username': username,
+        'password': password,
+        "name": name,
+        "phone": phone,
+        "address": city,
+        "email": email,
+        "dob": birth, //2020-07-01
+        "gender": gender,
+        "post": userType,
+      },
+    );
+
+    if (response.statusCode == 201) {
+      final responseData = jsonDecode(response.body);
+
+      // Registration successful, you can handle the response data here
+      print('Registration successful! Response: $responseData');
+    } else {
+      // Registration failed, display an error message to the user
+      print('Registration failed. Status code: ${response.statusCode}');
+    }
+  }
+  // final patient_doctor = TextEditingController();
+
+  void _handleRegistration() {
+    final username = _usernameController.text;
+    final password = _passwordController.text;
+    final email = _emailController.text;
+    final userType = _userTypeController.text;
+    final name = _nameController.text;
+    final phone = _phoneNumberController.text;
+    final city = _location_cityController.text;
+    final gender = _genderController.text;
+    final birth = _birthController.text;
+
+    register(
+        username, password, name, phone, city, email, birth, gender, userType);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,12 +114,12 @@ class _SignUpState extends State<SignUp> {
                       // username filed
                       MyTextField(
                         icon: const Icon(Icons.person),
-                        controller: nameTextController,
-                        hintText: "Name",
+                        controller: _usernameController,
+                        hintText: "User name",
                         obscureText: false,
                         validator: (value) {
                           if (value.isEmpty) {
-                            return 'Please enter your name';
+                            return 'Please enter your username';
                           }
                           return null;
                         },
@@ -68,9 +127,9 @@ class _SignUpState extends State<SignUp> {
                       const SizedBox(height: 5),
                       MyTextField(
                         icon: const Icon(Icons.person_2),
-                        controller: userNameTextController,
-                        hintText: "Last name",
-                        obscureText: false,
+                        controller: _passwordController,
+                        hintText: "Password",
+                        obscureText: true,
                         validator: (value) {
                           if (value.isEmpty) {
                             return 'Please enter your last name';
@@ -81,9 +140,9 @@ class _SignUpState extends State<SignUp> {
                       const SizedBox(height: 5),
                       MyTextField(
                         icon: const Icon(Icons.password),
-                        controller: passwordTextController,
-                        hintText: "Password",
-                        obscureText: true,
+                        controller: _nameController,
+                        hintText: "Name",
+                        obscureText: false,
                         validator: (value) {
                           if (value.isEmpty) {
                             return 'Please enter your password';
@@ -95,8 +154,8 @@ class _SignUpState extends State<SignUp> {
                       const SizedBox(height: 5),
                       MyTextField(
                         icon: const Icon(Icons.phone),
-                        controller: phoneTextController,
-                        hintText: "Phone Number",
+                        controller: _emailController,
+                        hintText: "Email",
                         obscureText: false,
                         validator: (value) {
                           if (value.isEmpty) {
@@ -108,8 +167,8 @@ class _SignUpState extends State<SignUp> {
                       const SizedBox(height: 5),
                       MyTextField(
                         icon: const Icon(Icons.location_city),
-                        controller: addressTextController,
-                        hintText: "Address",
+                        controller: _phoneNumberController,
+                        hintText: "Phone number",
                         obscureText: false,
                         validator: (value) {
                           if (value.isEmpty) {
@@ -121,8 +180,8 @@ class _SignUpState extends State<SignUp> {
                       const SizedBox(height: 5),
                       MyTextField(
                         icon: const Icon(Icons.email),
-                        controller: emailTextController,
-                        hintText: "Email",
+                        controller: _location_cityController,
+                        hintText: "Address",
                         obscureText: false,
                         validator: (value) {
                           if (value.isEmpty) {
@@ -131,11 +190,12 @@ class _SignUpState extends State<SignUp> {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 5),
+                      const SizedBox(height: 15),
+
                       MyTextField(
                         icon: const Icon(Icons.date_range),
-                        controller: dobTextController,
-                        hintText: "Date Of Birth",
+                        controller: _genderController,
+                        hintText: "Gender",
                         obscureText: false,
                         validator: (value) {
                           if (value.isEmpty) {
@@ -145,9 +205,34 @@ class _SignUpState extends State<SignUp> {
                         },
                       ),
                       const SizedBox(height: 15),
-
+                      MyTextField(
+                        icon: const Icon(Icons.date_range),
+                        controller: _userTypeController,
+                        hintText: "User Type",
+                        obscureText: false,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter your Birth';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 15),
+                      MyTextField(
+                        icon: const Icon(Icons.date_range),
+                        controller: _birthController,
+                        hintText: "Date of Birth",
+                        obscureText: false,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please enter your Birth';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 15),
                       // sign in button
-                      MyButton(onPressed: () {}, text: "Sign Up"),
+                      MyButton(onPressed: _handleRegistration, text: "Sign Up"),
                       const SizedBox(height: 10),
                       GestureDetector(
                         onTap: () {

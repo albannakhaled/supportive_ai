@@ -1,34 +1,48 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-void registerUser() async {
-  var url = Uri.parse('http://127.0.0.1:8000/register/');
 
+  Future<void> signUpUser(
+    String username,
+    String password,
+    String name,
+    String email,
+    String phoneNumber,
+    String location_city,
+    String patient_doctor,
+    String gender,
+    String birth,) async {
+  var url = Uri.parse('https://supportiveai-api.onrender.com/register/');
   var body = jsonEncode({
-    'username': 'khaeld',
-    'password': '123qweasdzxc',
-    'name': 'John',
-    'email': 'albannakhalil90@gmail.com',
-    'phone': '1234567890',
-    'address': 'New York',
-    'gender': 'Male',
-    'dob': '1990-01-01',
+    'username': username,
+      'password': password,
+      'name': name,
+      'email': email,
+      'phoneNumber': phoneNumber,
+      'location_city': location_city,
+      'patient_doctor': patient_doctor,
+      'gender': gender,
+      'birth': birth,
   });
-
   var headers = {'Content-Type': 'application/json'};
 
-  var response = await http.post(url, body: body, headers: headers);
+  try {
+    var response = await http.post(url, body: body, headers: headers);
 
-  if (response.statusCode == 201) {
-    // Registration successful
-    print('User registered successfully');
-  } else {
-    // Registration failed
-    print('Registration failed with status code: ${response.statusCode}');
-    print('Response body: ${response.body}');
+    if (response.statusCode == 201) {
+      // Signup successful
+      print('Signup successful');
+    } else {
+      // Signup failed
+      print('Signup failed with status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+    }
+  } catch (e) {
+    // Handle any exceptions
+    print('Exception occurred during signup: $e');
   }
 }
 
 void main() async {
-  registerUser();
+  signUpUser('test2','123qweasdzxc','ahmad','albannakhalil90@gmail.com','0096181812967','akkar','Patient','M','01/01/2011');
 }

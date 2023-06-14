@@ -5,6 +5,9 @@ import 'package:supportive_ai/responsive.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import '../home_page/home_page.dart';
+import '../home_page/widgets/nav_bar.dart';
+
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
 
@@ -13,25 +16,57 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-  // text editing controller
-  final emailTextController = TextEditingController();
-  final passwordTextController = TextEditingController();
-  void loginUser(String username,String password)async{
-  var url = Uri.parse('http://127.0.0.1:8000/login/');
-  var body = jsonEncode({
-    'username':'$username',
-    'password':'$password',
-  });
-  var headers = {'Content-Type':'application/json'};
-  var response = await http.post(url,body:body,headers:headers);
-  if(response.statusCode == 200){
-    print("login success");
-    Navigator.pushNamed(context, 'home');
-  }else{
-    print('registration fialed : ${response.statusCode}');
-    print('response body: ${response.body}');
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool isLoading = false; // Add a boolean flag to track loading state
+  bool _loginSuccess = true; // New flag to track login success
+
+  Future<void> login(
+      String username, String password, BuildContext context) async {
+    final url = Uri.parse('http://127.0.0.1:8000/login/');
+
+    setState(() {
+      isLoading = true;
+      _loginSuccess = true; // Reset login success flag
+    });
+
+    final response = await http.post(
+      url,
+      body: {'username': username, 'password': password},
+    );
+
+    setState(() {
+      isLoading = false;
+    });
+
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(response.body);
+      final String token = responseData['token'];
+
+      print('Logged in successfully! Token: $token');
+
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        'home',
+        (route) => false, // Remove all existing routes
+      );
+    } else {
+      print('Login failed. Status code: ${response.statusCode}');
+
+      setState(() {
+        _loginSuccess =
+            false; // Set login success flag to display error message
+      });
+    }
   }
-}
+
+  void _handleLogin(BuildContext context) {
+    final username = _usernameController.text;
+    final password = _passwordController.text;
+
+    login(username, password, context);
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight =
@@ -45,9 +80,7 @@ class _SignInState extends State<SignIn> {
           decoration: BoxDecoration(
               border: Border.all(color: Colors.white.withOpacity(0.13)),
               image: const DecorationImage(
-                  opacity: 80,
-                  image: AssetImage(""),
-                  fit: BoxFit.cover)),
+                  opacity: 80, image: AssetImage(""), fit: BoxFit.cover)),
           child: SingleChildScrollView(
             child: Padding(
               padding: EdgeInsets.symmetric(
@@ -74,14 +107,14 @@ class _SignInState extends State<SignIn> {
                         // username filed
                         MyTextField(
                             icon: const Icon(Icons.person),
-                            controller: emailTextController,
+                            controller: _usernameController,
                             hintText: "User name",
                             obscureText: false),
                         // password field
                         SizedBox(height: screenHeight * 0.05),
                         MyTextField(
                           icon: const Icon(Icons.password_outlined),
-                          controller: passwordTextController,
+                          controller: _passwordController,
                           hintText: "Password",
                           obscureText: true,
                         ),
@@ -90,9 +123,19 @@ class _SignInState extends State<SignIn> {
                         SizedBox(height: screenHeight * 0.05),
                         SizedBox(
                           height: screenHeight * 0.07,
-                          child: MyButton(onPressed: () {
-                            Navigator.pushNamed(context, 'home');
-                          }, text: "Sign In"),
+                          child: isLoading
+                              ? const CircularProgressIndicator()
+                              : _loginSuccess // Show error message if login failed
+                                  ? MyButton(
+                                      onPressed: () => _handleLogin(context),
+                                      text: "Sign In",
+                                    )
+                                  : const Text(
+                                      "Invalid username or password",
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                      ),
+                                    ),
                         ),
                         // go to register page
                         const SizedBox(
@@ -110,8 +153,7 @@ class _SignInState extends State<SignIn> {
                             const SizedBox(width: 10),
                             GestureDetector(
                               onTap: () {
-                                loginUser('$emailTextController','$passwordTextController');
-
+                                Navigator.pushNamed(context, 'signup');
                               },
                               child: const Text(
                                 "Register Now",
