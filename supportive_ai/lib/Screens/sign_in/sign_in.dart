@@ -6,6 +6,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../home_page/home_page.dart';
+import '../home_page/widgets/nav_bar.dart';
+
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
 
@@ -14,41 +16,57 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
- final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool isLoading = false; // Add a boolean flag to track loading state
+  bool _loginSuccess = true; // New flag to track login success
 
-  Future<void> login(String username, String password, BuildContext context) async {
-  final url = Uri.parse('http://127.0.0.1:8000/login/');
+  Future<void> login(
+      String username, String password, BuildContext context) async {
+    final url = Uri.parse('http://127.0.0.1:8000/login/');
 
-  final response = await http.post(
-    url,
-    body: {'username': username, 'password': password},
-  );
+    setState(() {
+      isLoading = true;
+      _loginSuccess = true; // Reset login success flag
+    });
 
-  if (response.statusCode == 200) {
-    final responseData = jsonDecode(response.body);
-    final String token = responseData['token'];
-
-    // Login successful, you can store the authentication token here
-    print('Logged in successfully! Token: $token');
-
-    // Navigate to the home page
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => HomePage()),
+    final response = await http.post(
+      url,
+      body: {'username': username, 'password': password},
     );
-  } else {
-    // Login failed, display an error message to the user
-    print('Login failed. Status code: ${response.statusCode}');
+
+    setState(() {
+      isLoading = false;
+    });
+
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(response.body);
+      final String token = responseData['token'];
+
+      print('Logged in successfully! Token: $token');
+
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        'home',
+        (route) => false, // Remove all existing routes
+      );
+    } else {
+      print('Login failed. Status code: ${response.statusCode}');
+
+      setState(() {
+        _loginSuccess =
+            false; // Set login success flag to display error message
+      });
+    }
   }
-}
 
   void _handleLogin(BuildContext context) {
     final username = _usernameController.text;
     final password = _passwordController.text;
 
-    login(username, password,context);
+    login(username, password, context);
   }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight =
@@ -105,9 +123,19 @@ class _SignInState extends State<SignIn> {
                         SizedBox(height: screenHeight * 0.05),
                         SizedBox(
                           height: screenHeight * 0.07,
-                          child: MyButton(
-                            onPressed: () => _handleLogin(context),
-                             text: "Sign In"),
+                          child: isLoading
+                              ? const CircularProgressIndicator()
+                              : _loginSuccess // Show error message if login failed
+                                  ? MyButton(
+                                      onPressed: () => _handleLogin(context),
+                                      text: "Sign In",
+                                    )
+                                  : const Text(
+                                      "Invalid username or password",
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                      ),
+                                    ),
                         ),
                         // go to register page
                         const SizedBox(

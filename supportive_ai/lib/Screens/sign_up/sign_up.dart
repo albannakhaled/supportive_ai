@@ -26,15 +26,16 @@ class _SignUpState extends State<SignUp> {
   final _birthController = TextEditingController();
 
   Future<void> register(
-      String username,
-      String password,
-      String email,
-      String userType,
-      String name,
-      String phone,
-      String city,
-      String gender,
-      String birth) async {
+    String username,
+    String password,
+    String name,
+    String phone,
+    String city,
+    String email,
+    String birth,
+    String gender,
+    String userType,
+  ) async {
     final url = Uri.parse('http://127.0.0.1:8000/register/');
 
     final response = await http.post(
@@ -42,14 +43,13 @@ class _SignUpState extends State<SignUp> {
       body: {
         'username': username,
         'password': password,
-        'email': email,
-        "name": "khaled",
-        "phone": "+96181812967",
-        "address": "AKKAR",
-        "email": "albannakhalil90@gmail.com",
-        "dob": "2020-07-01",
-        "gender": "M",
-        "post": "doctor"
+        "name": name,
+        "phone": phone,
+        "address": city,
+        "email": email,
+        "dob": birth, //2020-07-01
+        "gender": gender,
+        "post": userType,
       },
     );
 
@@ -77,7 +77,7 @@ class _SignUpState extends State<SignUp> {
     final birth = _birthController.text;
 
     register(
-        username, password, email, userType, name, phone, city, gender, birth);
+        username, password, name, phone, city, email, birth, gender, userType);
   }
 
   @override
