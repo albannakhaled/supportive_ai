@@ -36,7 +36,6 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
       return 'Hi there!';
     } else if (userMessage.toLowerCase().contains('how are you')) {
       return 'I am good, thank you!';
-    } 
     } else {
       return 'I am sorry, I cannot understand that.';
     }
