@@ -14,6 +14,7 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  final _formKey = GlobalKey<FormState>();
   // text editing controller
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -36,7 +37,7 @@ class _SignUpState extends State<SignUp> {
     String gender,
     String userType,
   ) async {
-    final url = Uri.parse('http://127.0.0.1:8000/register/');
+    final url = Uri.parse('https://supportiveai-api.onrender.com/register/');
 
     final response = await http.post(
       url,
@@ -94,20 +95,8 @@ class _SignUpState extends State<SignUp> {
                 vertical: screenHeight * 0.1, horizontal: screenWidth * 0.1),
             child: SafeArea(
               child: Center(
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: screenHeight * 0.03,
-                      vertical: screenWidth * 0.1),
-                  decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 255, 255, 255),
-                      boxShadow: const [
-                        BoxShadow(
-                            blurRadius: 3,
-                            spreadRadius: 1,
-                            color: Color.fromARGB(255, 155, 103, 164),
-                            offset: Offset(3, 3)),
-                      ],
-                      borderRadius: BorderRadius.circular(35)),
+                child: Form(
+                  key: _formKey,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -118,113 +107,122 @@ class _SignUpState extends State<SignUp> {
                         hintText: "User name",
                         obscureText: false,
                         validator: (value) {
-                          if (value.isEmpty) {
+                          if (value!.isEmpty) {
                             return 'Please enter your username';
                           }
                           return null;
                         },
                       ),
                       const SizedBox(height: 5),
+                      // password field
                       MyTextField(
-                        icon: const Icon(Icons.person_2),
+                        icon: const Icon(Icons.password_outlined),
                         controller: _passwordController,
                         hintText: "Password",
                         obscureText: true,
                         validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Please enter your last name';
+                          if (value!.isEmpty) {
+                            return 'Please enter your Password';
                           }
                           return null;
                         },
                       ),
                       const SizedBox(height: 5),
+                      // name field
                       MyTextField(
-                        icon: const Icon(Icons.password),
+                        icon: const Icon(Icons.person),
                         controller: _nameController,
                         hintText: "Name",
                         obscureText: false,
                         validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Please enter your password';
+                          if (value!.isEmpty) {
+                            return 'Please enter your Name';
                           }
                           return null;
                         },
                       ),
 
                       const SizedBox(height: 5),
+
+                      //email field
                       MyTextField(
-                        icon: const Icon(Icons.phone),
+                        icon: const Icon(Icons.email),
                         controller: _emailController,
                         hintText: "Email",
                         obscureText: false,
                         validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Please enter your number';
+                          if (value!.isEmpty) {
+                            return 'Please enter your Email';
                           }
                           return null;
                         },
                       ),
                       const SizedBox(height: 5),
+                      // number field
                       MyTextField(
-                        icon: const Icon(Icons.location_city),
+                        icon: const Icon(Icons.phone),
                         controller: _phoneNumberController,
                         hintText: "Phone number",
                         obscureText: false,
                         validator: (value) {
-                          if (value.isEmpty) {
+                          if (value!.isEmpty) {
+                            return 'Please enter your Phone number';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 5),
+                      //address field
+                      MyTextField(
+                        icon: const Icon(Icons.location_city),
+                        controller: _location_cityController,
+                        hintText: "Address",
+                        obscureText: false,
+                        validator: (value) {
+                          if (value!.isEmpty) {
                             return 'Please enter your Address';
                           }
                           return null;
                         },
                       ),
                       const SizedBox(height: 5),
-                      MyTextField(
-                        icon: const Icon(Icons.email),
-                        controller: _location_cityController,
-                        hintText: "Address",
-                        obscureText: false,
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Please enter your Email';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 15),
+                      // gender field
 
                       MyTextField(
-                        icon: const Icon(Icons.date_range),
+                        icon: const Icon(Icons.male_outlined),
                         controller: _genderController,
                         hintText: "Gender",
                         obscureText: false,
                         validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Please enter your Birth';
+                          if (value!.isEmpty) {
+                            return 'Please enter your Gender';
                           }
                           return null;
                         },
                       ),
-                      const SizedBox(height: 15),
+                      const SizedBox(height: 5),
+                      // user type field
                       MyTextField(
-                        icon: const Icon(Icons.date_range),
+                        icon: const Icon(Icons.supervised_user_circle),
                         controller: _userTypeController,
-                        hintText: "User Type",
+                        hintText: "patient or doctor",
                         obscureText: false,
                         validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Please enter your Birth';
+                          if (value!.isEmpty) {
+                            return 'Please enter your Type';
                           }
                           return null;
                         },
                       ),
-                      const SizedBox(height: 15),
+                      const SizedBox(height: 5),
+                      //birth field
                       MyTextField(
                         icon: const Icon(Icons.date_range),
                         controller: _birthController,
                         hintText: "Date of Birth",
                         obscureText: false,
                         validator: (value) {
-                          if (value.isEmpty) {
+                          if (value!.isEmpty) {
                             return 'Please enter your Birth';
                           }
                           return null;
@@ -232,7 +230,13 @@ class _SignUpState extends State<SignUp> {
                       ),
                       const SizedBox(height: 15),
                       // sign in button
-                      MyButton(onPressed: _handleRegistration, text: "Sign Up"),
+                      MyButton(
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              _handleRegistration;
+                            }
+                          },
+                          text: "Sign Up"),
                       const SizedBox(height: 10),
                       GestureDetector(
                         onTap: () {

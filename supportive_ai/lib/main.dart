@@ -3,7 +3,7 @@ import 'package:supportive_ai/Screens/home_page/profile.dart';
 import 'package:supportive_ai/Screens/home_page/widgets/nav_bar.dart';
 import 'package:supportive_ai/Screens/sign_in/sign_in.dart';
 import 'package:supportive_ai/Screens/sign_up/sign_up.dart';
-import 'package:supportive_ai/Screens/splash/splash.dart';
+// import 'package:supportive_ai/Screens/splash/splash.dart';
 
 import 'Screens/home_page/chat.dart';
 
@@ -19,19 +19,20 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        'signup': (context) => SignUp(),
-        'signin': (context) => SignIn(),
+        'signup': (context) => const SignUp(),
+        'signin': (context) => const SignIn(),
         'chat': (context) => ChatBotScreen(),
-        'profile': (context) => Profile(),
-        'home': (context) => NavBar(),
+        'profile': (context) => const Profile(),
+        'home': (context) => const NavBar(),
       },
       theme: ThemeData(
+        useMaterial3: true,
         primarySwatch: Colors.purple,
         primaryColor: const Color.fromARGB(255, 69, 7, 105),
       ),
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      home: SignUp(),
+      home: const SignIn(),
     );
   }
 }

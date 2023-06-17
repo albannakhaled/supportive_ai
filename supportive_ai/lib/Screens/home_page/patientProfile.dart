@@ -13,19 +13,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Patient Profile'),
+        title: const Text('Patient Profile'),
         backgroundColor: Colors.purple,
       ),
       body: Container(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Choose a Doctor:',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.purple),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             DropdownButton(
               value: selectedDoctor,
               items: doctors.map((doctor) {
@@ -39,20 +39,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   selectedDoctor = value!;
                 });
               },
-              style: TextStyle(color: Colors.purple),
+              style: const TextStyle(color: Colors.purple),
               dropdownColor: Colors.purple.withOpacity(0.8),
             ),
-            SizedBox(height: 16),
-            Text(
+            const SizedBox(height: 16),
+            const Text(
               'Patient Information:',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.purple),
             ),
-            SizedBox(height: 8),
-            Text(
+            const SizedBox(height: 8),
+            const Text(
               'Name: John',
               style: TextStyle(fontSize: 14, color: Colors.purple),
             ),
-            Text(
+            const Text(
               'Last Name: Doe',
               style: TextStyle(fontSize: 14, color: Colors.purple),
             ),

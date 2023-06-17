@@ -72,7 +72,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                       ),
                     ),
                     trailing: message.isUser
-                        ? CircleAvatar(
+                        ? const CircleAvatar(
                             child: Icon(
                               Icons.person,
                               color: Colors.purple,

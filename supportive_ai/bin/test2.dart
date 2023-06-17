@@ -1,30 +1,33 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-
-  Future<void> signUpUser(
-    String username,
-    String password,
-    String name,
-    String email,
-    String phoneNumber,
-    String location_city,
-    String patient_doctor,
-    String gender,
-    String birth,) async {
-  var url = Uri.parse('https://supportiveai-api.onrender.com/register/');
+Future<void> signUpUser(
+  String username,
+  String password,
+  String name,
+  String email,
+  String phoneNumber,
+  String location_city,
+  String patient_doctor,
+  String gender,
+  String birth,
+) async {
+  var url = Uri.parse('http://127.0.0.1:8000/register/');
   var body = jsonEncode({
     'username': username,
-      'password': password,
-      'name': name,
-      'email': email,
-      'phoneNumber': phoneNumber,
-      'location_city': location_city,
-      'patient_doctor': patient_doctor,
-      'gender': gender,
-      'birth': birth,
+        'password': password,
+        "name": name,
+        "phone": phoneNumber,
+        "address": location_city,
+        "email": email,
+        "dob": birth, //2020-07-01
+        "gender": gender,
+        "post": patient_doctor,
   });
-  var headers = {'Content-Type': 'application/json'};
+  var headers = {
+    'Content-Type': 'application/json',
+    'X-CSRFToken': 'ghMzXXOybawlKlDp5md46Zz03bdud0g9',
+  };
 
   try {
     var response = await http.post(url, body: body, headers: headers);
@@ -44,5 +47,6 @@ import 'package:http/http.dart' as http;
 }
 
 void main() async {
-  signUpUser('test2','123qweasdzxc','ahmad','albannakhalil90@gmail.com','0096181812967','akkar','Patient','M','01/01/2011');
+  signUpUser('test101', '123', 'ahmad', 'albannakhalil90@gmail.com', '1234567',
+      'akkar', 'patient', 'M', '2010-10-10');
 }

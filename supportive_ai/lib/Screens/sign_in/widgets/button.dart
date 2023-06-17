@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../responsive.dart';
 
 class MyButton extends StatelessWidget {
-  final  void Function()? onPressed;
+  final void Function()? onPressed;
   final String text;
   const MyButton({super.key, required this.text, this.onPressed});
 
@@ -23,7 +23,7 @@ class MyButton extends StatelessWidget {
           // surfaceTintColor: Colors.purple, // Text color
           padding: const EdgeInsets.all(16), // Padding around the button
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15), // Rounded corners
+            borderRadius: BorderRadius.circular(9), // Rounded corners
           ),
         ),
         onPressed: onPressed,
