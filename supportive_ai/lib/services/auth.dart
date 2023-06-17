@@ -1,33 +1,53 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-Future<void> postData() async {
-  var apiUrl = 'https://example.com/api/posts'; // Replace with your API endpoint
+class SignUpAuth {
+  // const SignUpAuth({super.});
+  Future<void> signUpUser(
+    String username,
+    String password,
+    String name,
+    String email,
+    String phoneNumber,
+    String location_city,
+    String patient_doctor,
+    String gender,
+    String birth,) async {
+  var url = Uri.parse('https://supportiveai-api.onrender.com/register/');
+  var body = jsonEncode({
+    'username': username,
+      'password': password,
+      'name': name,
+      'email': email,
+      'phoneNumber': phoneNumber,
+      'location_city': location_city,
+      'patient_doctor': patient_doctor,
+      'gender': gender,
+      'birth': birth,
+  });
+  var headers = {'Content-Type': 'application/json'};
 
-  var postData = {
-    'name': '_nameController.text',
-    'last_name': '_lastNameController.text',
-    'password': '_passwordController.text',
-    'password_confirm': '_confirmPasswordController.text',
-    'phone': '_phoneController.text',
-    'address': '_addressController.text',
-    'email': '_emailController.text',
-    'dob': '_dobController.text',
-    'gender': '_selectedGender',
-    // Add any other fields you need to send in the request
-  };
+  try {
+    var response = await http.post(url, body: body, headers: headers);
 
-  var response = await http.post(
-    Uri.parse(apiUrl),
-    body: jsonEncode(postData),
-    headers: {'Content-Type': 'application/json'},
-  );
-
-  if (response.statusCode == 201) {
-    // POST request successful
-    print('Post request successful!');
-  } else {
-    // POST request failed
-    print('Post request failed with status: ${response.statusCode}.');
+    if (response.statusCode == 201) {
+      // Signup successful
+      print('Signup successful');
+    } else {
+      // Signup failed
+      print('Signup failed with status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+    }
+  } catch (e) {
+    // Handle any exceptions
+    print('Exception occurred during signup: $e');
   }
 }
+  // log in
+
+
+}
+
+
+
+

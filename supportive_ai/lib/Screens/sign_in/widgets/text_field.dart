@@ -2,29 +2,32 @@ import 'package:flutter/material.dart';
 
 class MyTextField extends StatelessWidget {
   final TextEditingController controller;
+  String? Function(String?)? validator;
   final String hintText;
   final bool obscureText;
   final Icon icon;
-  const MyTextField({
-    super.key,
+
+  MyTextField({
+    Key? key,
     required this.controller,
     required this.hintText,
     required this.obscureText,
-    required this.icon, 
-    final String? Function(dynamic value)? validator,
-  });
+    required this.icon,
+    this.validator,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      // autofocus: true,
-
+    return TextFormField(
+      validator: validator,
       controller: controller,
       obscureText: obscureText,
+      cursorColor: Colors.blueGrey,
       decoration: InputDecoration(
         prefixIcon: icon,
-        enabledBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(9),
+          borderSide: BorderSide(style: BorderStyle.none),
         ),
         fillColor: Colors.grey.shade300,
         filled: true,
@@ -32,6 +35,11 @@ class MyTextField extends StatelessWidget {
         hintStyle: TextStyle(
           color: Colors.grey[500],
         ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(9),
+          borderSide: BorderSide(color: Colors.purple, width: 1.2),
+        ),
+        prefixIconColor: Colors.grey,
       ),
     );
   }
