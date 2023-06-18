@@ -203,7 +203,7 @@ class _SignUpState extends State<SignUp> {
                               _handleRegistration;
                             }
                           },
-                          text: "Sign Up"),
+                          child: Text("Sign Up")),
                       const SizedBox(height: 10),
                       GestureDetector(
                         onTap: () {

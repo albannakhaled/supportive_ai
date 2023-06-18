@@ -5,6 +5,7 @@ import 'package:supportive_ai/Screens/sign_in/widgets/text_field.dart';
 import 'package:supportive_ai/responsive.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({Key? key});
@@ -14,49 +15,61 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-  bool _logSuccess = false;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  Future<void> login(String username, String password) async {
-    final url = Uri.parse('http://127.0.0.1:8000/login/');
-    final headers = {
-      'Content-type': 'application/json',
-      'Accept': 'application/json',
-      'Content-Type': 'application/x-www-form-urlencoded',
-      // 'Authorization': 'Bearer $token',
-      // 'X-CSRFToken':
-      //     'ghMzXXOybawlKlDp5md46Zz03bdud0g9', // Update the referer URL here
+  bool _isLoading = false;
+
+  void _signIn() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final String username = _usernameController.text.trim();
+    final String password = _passwordController.text.trim();
+
+    final Map<String, String> data = {
+      "username": username,
+      "password": password,
     };
 
-    final body = {
-      'username': username,
-      'password': password,
-    };
+    final Uri signInUrl = Uri.parse('http://127.0.0.1:8000/login/');
 
-    final response = await http.post(
-      url,
-      headers: headers,
-      body: body,
-    );
+    try {
+      final http.Response response = await http.post(
+        signInUrl,
+        headers: {
+          'Content-Type': 'application/json',
+          // 'X-CSRFToken':'BNGnnfT5i20zqqWuGvsRrExAQCLTK7oLFtVo1XeWcWWgAxY7MWMYqpiWw2xjpU4Z'
+        },
+        body: json.encode(data),
+      );
+      // print(response);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseBody = json.decode(response.body);
+        final String token = responseBody['data']['Token'];
 
-    if (response.statusCode == 200) {
-      final responseData = jsonDecode(response.body);
-      final String token = responseData['data']['Token'];
-      if (token != null) {
-        _logSuccess = true;
+        // Save token to shared preferences for later use
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('token', token);
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage(token: token)),
+        );
+      } else {
+        // Handle error response
+        print('Sign-in failed: ${response.body}');
+        // Display an error message to the user
       }
-      print('Logged in successfully! Token: $token');
-    } else {
-      print('Login failed. Status code: ${response.statusCode}');
+    } catch (e) {
+      print('Error occurred during sign-in: $e');
+      // Display an error message to the user
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
-  }
-
-  void _handleLogin() {
-    final username = _usernameController.text;
-    final password = _passwordController.text;
-
-    login(username, password);
   }
 
   @override
@@ -111,18 +124,10 @@ class _SignInState extends State<SignIn> {
                     SizedBox(
                       height: screenHeight * 0.07,
                       child: MyButton(
-                        onPressed: () {
-                          if (_logSuccess) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      const HomePage()),
-                            );
-                          }
-                          _handleLogin;
-                        },
-                        text: "Sign In",
+                        onPressed: _isLoading ? null : _signIn,
+                        child: _isLoading
+                            ? const CircularProgressIndicator()
+                            : const Text('Sign In'),
                       ),
                     ),
                     // go to register page
