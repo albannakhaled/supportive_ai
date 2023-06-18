@@ -29,11 +29,11 @@ class _SignInState extends State<SignIn> {
     final String password = _passwordController.text.trim();
 
     final Map<String, String> data = {
-      "username": username,
+      "email": username,
       "password": password,
     };
 
-    final Uri signInUrl = Uri.parse('http://127.0.0.1:8000/login/');
+    final Uri signInUrl = Uri.parse('http://restapi.adequateshop.com/api/authaccount/login');
 
     try {
       final http.Response response = await http.post(
