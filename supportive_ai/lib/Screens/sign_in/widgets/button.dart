@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import '../../../responsive.dart';
 
 class MyButton extends StatelessWidget {
+  final Widget? child;
   final void Function()? onPressed;
-  final String text;
-  const MyButton({super.key, required this.text, this.onPressed});
+  const MyButton({super.key, this.onPressed, this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class MyButton extends StatelessWidget {
           ),
         ),
         onPressed: onPressed,
-        child: Text(text),
+        child: child,
       ),
     );
   }

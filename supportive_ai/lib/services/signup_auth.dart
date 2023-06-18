@@ -51,7 +51,7 @@ Future<void> signUpUser(
   }
 }
 
-void main()
-{
-  signUpUser('username', 'password', 'name', '123', 'address', 'albannakhail90@gmail.com', '2000-2-2', 'M', 'patient');
-}
+// void main()
+// {
+//   signUpUser('username', 'password', 'name', '123', 'address', 'albannakhail90@gmail.com', '2000-2-2', 'M', 'patient');
+// }

@@ -3,9 +3,11 @@ import 'dart:convert';
 
 Future<void> login(String username, String password) async {
   final url = Uri.parse('http://127.0.0.1:8000/login/');
-
   final headers = {
+    'Content-type': 'application/json',
+    'Accept': 'application/json',
     'Content-Type': 'application/x-www-form-urlencoded',
+    // 'Authorization': 'Bearer $token',
     // 'X-CSRFToken': 'ghMzXXOybawlKlDp5md46Zz03bdud0g9', // Update the referer URL here
   };
 
@@ -22,7 +24,7 @@ Future<void> login(String username, String password) async {
 
   if (response.statusCode == 200) {
     final responseData = jsonDecode(response.body);
-    final String token = responseData['token'];
+    final String token = responseData['data']['Token'];
 
     print('Logged in successfully! Token: $token');
   } else {

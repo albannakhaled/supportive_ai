@@ -1,10 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:supportive_ai/Screens/sign_in/widgets/button.dart';
 import 'package:supportive_ai/Screens/sign_in/widgets/text_field.dart';
 import 'package:supportive_ai/responsive.dart';
-import 'package:http/http.dart' as http;
+import '../../services/signup_auth.dart';
+
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -26,44 +25,7 @@ class _SignUpState extends State<SignUp> {
   final _genderController = TextEditingController();
   final _birthController = TextEditingController();
 
-  Future<void> register(
-    String username,
-    String password,
-    String name,
-    String phone,
-    String city,
-    String email,
-    String birth,
-    String gender,
-    String userType,
-  ) async {
-    final url = Uri.parse('https://supportiveai-api.onrender.com/register/');
-
-    final response = await http.post(
-      url,
-      body: {
-        'username': username,
-        'password': password,
-        "name": name,
-        "phone": phone,
-        "address": city,
-        "email": email,
-        "dob": birth, //2020-07-01
-        "gender": gender,
-        "post": userType,
-      },
-    );
-
-    if (response.statusCode == 201) {
-      final responseData = jsonDecode(response.body);
-
-      // Registration successful, you can handle the response data here
-      print('Registration successful! Response: $responseData');
-    } else {
-      // Registration failed, display an error message to the user
-      print('Registration failed. Status code: ${response.statusCode}');
-    }
-  }
+  
   // final patient_doctor = TextEditingController();
 
   void _handleRegistration() {
@@ -77,7 +39,7 @@ class _SignUpState extends State<SignUp> {
     final gender = _genderController.text;
     final birth = _birthController.text;
 
-    register(
+    signUpUser(
         username, password, name, phone, city, email, birth, gender, userType);
   }
 
@@ -154,7 +116,12 @@ class _SignUpState extends State<SignUp> {
                           if (value!.isEmpty) {
                             return 'Please enter your Email';
                           }
-                          return null;
+                          // check valid email
+                        //   final regex = RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+                        //   if(!regex.hasMatch('$_emailController')){
+                        //     return 'Enter a valid Email';
+                        //   }
+                        //   return null;
                         },
                       ),
                       const SizedBox(height: 5),
@@ -236,7 +203,7 @@ class _SignUpState extends State<SignUp> {
                               _handleRegistration;
                             }
                           },
-                          text: "Sign Up"),
+                          child: Text("Sign Up")),
                       const SizedBox(height: 10),
                       GestureDetector(
                         onTap: () {
