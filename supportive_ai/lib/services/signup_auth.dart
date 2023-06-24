@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -12,7 +13,7 @@ Future<void> signUpUser(
   String gender,
   String post,
 ) async {
-  final url = 'http://127.0.0.1:8000/register/';
+  final url = 'https://supportiveai-api.onrender.com/register-api/';
 
   final headers = {
     'Content-type': 'application/json',
@@ -39,6 +40,7 @@ Future<void> signUpUser(
     );
 
     if (response.statusCode == 201 || response.statusCode == 200) {
+      // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Register Successfully")));
       final responseData = jsonDecode(response.body);
       // Process the response data as needed
       final token = responseData['token']['access'];
