@@ -33,7 +33,7 @@ class _SignInState extends State<SignIn> {
       "password": password,
     };
 
-    final Uri signInUrl = Uri.parse('https://supportiveai-api.onrender.com/login/');
+    final Uri signInUrl = Uri.parse('https://supportiveai-api.onrender.com/login-api/');
 
     try {
       final http.Response response = await http.post(

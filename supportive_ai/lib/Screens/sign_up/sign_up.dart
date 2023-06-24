@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:supportive_ai/Screens/sign_in/widgets/button.dart';
 import 'package:supportive_ai/Screens/sign_in/widgets/text_field.dart';
 import 'package:supportive_ai/responsive.dart';
-import '../../services/signup_auth.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 
 class SignUp extends StatefulWidget {
@@ -42,6 +43,56 @@ class _SignUpState extends State<SignUp> {
     signUpUser(
         username, password, name, phone, city, email, birth, gender, userType);
   }
+  Future<void> signUpUser(
+  String username,
+  String password,
+  String name,
+  String phone,
+  String address,
+  String email,
+  String dob,
+  String gender,
+  String post,
+) async {
+  final url = 'https://supportiveai-api.onrender.com/register-api/';
+
+  final headers = {
+    'Content-type': 'application/json',
+    'Accept': 'application/json',
+  };
+
+  final body = {
+    'username': username,
+    'password': password,
+    'name': name,
+    'phone': phone,
+    'address': address,
+    'email': email,
+    'dob': dob,
+    'gender': gender,
+    'post': post,
+  };
+
+  try {
+    final response = await http.post(
+      Uri.parse(url),
+      headers: headers,
+      body: jsonEncode(body),
+    );
+
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Register Successfully")));
+      final responseData = jsonDecode(response.body);
+      // Process the response data as needed
+      final token = responseData['token']['access'];
+      print('Signed up successfully! Token: $token');
+    } else {
+      print('Sign up failed. Status code: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error during sign up: $e');
+  }
+}
 
   @override
   Widget build(BuildContext context) {
