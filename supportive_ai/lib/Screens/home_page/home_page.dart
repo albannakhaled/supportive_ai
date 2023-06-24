@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:supportive_ai/Screens/home_page/widgets/nav_bar.dart';
 
+import '../../main.dart';
+
 class HomePage extends StatefulWidget {
   // final String token;
   const HomePage({super.key});
@@ -14,7 +16,9 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return const Scaffold(
       bottomNavigationBar: NavBar(),
-      body: Center(child: Text('login success')),
+      body: Center(
+        child: Text('fdas'),
+      ),
     );
   }
 }

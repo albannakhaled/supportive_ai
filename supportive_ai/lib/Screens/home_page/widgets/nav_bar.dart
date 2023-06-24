@@ -24,7 +24,9 @@ class NavBar extends StatelessWidget {
               GButton(
                 icon: Icons.home,
                 text: 'Home',
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, 'home-page');
+                },
               ),
               GButton(
                 icon: Icons.chat,

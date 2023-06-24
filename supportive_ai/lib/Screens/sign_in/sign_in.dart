@@ -5,7 +5,7 @@ import 'package:supportive_ai/Screens/sign_in/widgets/text_field.dart';
 import 'package:supportive_ai/responsive.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supportive_ai/services/sharespref.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({Key? key});
@@ -18,9 +18,27 @@ class _SignInState extends State<SignIn> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   bool _isLoading = false;
 
   void _signIn() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    if (!_validateInputs()) {
+      // Validation failed, return early
+      setState(() {
+        _isLoading = false;
+      });
+      return;
+    }
     setState(() {
       _isLoading = true;
     });
@@ -33,7 +51,8 @@ class _SignInState extends State<SignIn> {
       "password": password,
     };
 
-    final Uri signInUrl = Uri.parse('https://supportiveai-api.onrender.com/login-api/');
+    final Uri signInUrl =
+        Uri.parse('https://supportiveai-api.onrender.com/login-api/');
 
     try {
       final http.Response response = await http.post(
@@ -41,19 +60,25 @@ class _SignInState extends State<SignIn> {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          // 'X-CSRFToken':'BNGnnfT5i20zqqWuGvsRrExAQCLTK7oLFtVo1XeWcWWgAxY7MWMYqpiWw2xjpU4Z'
+          // 'X-CSRFToken':''
         },
         body: json.encode(data),
       );
       // print(response);
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseBody = json.decode(response.body);
-        final String token = responseBody['data']['Token'];
-
+        
         // Save token to shared preferences for later use
-        final SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('token', token);
+        final String token = responseBody['data']['Token'];
+        MySharedPreferences.saveToken(token);
 
+        if(responseBody['message']!=null){
+          ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Verify you're Email"),
+          ),
+        );
+        }
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => HomePage()),
@@ -62,6 +87,11 @@ class _SignInState extends State<SignIn> {
         // Handle error response
         print('Sign-in failed: ${response.body}');
         // Display an error message to the user
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("User Name or Password is incorrect"),
+          ),
+        );
       }
     } catch (e) {
       print('Error occurred during sign-in: $e');
@@ -70,6 +100,16 @@ class _SignInState extends State<SignIn> {
       setState(() {
         _isLoading = false;
       });
+    }
+  }
+
+  bool _validateInputs() {
+    if (_formKey.currentState!.validate()) {
+      // All form fields are valid
+      return true;
+    } else {
+      // Some form fields are invalid
+      return false;
     }
   }
 

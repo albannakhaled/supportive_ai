@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:supportive_ai/Screens/sign_in/sign_in.dart';
 import 'package:supportive_ai/Screens/sign_in/widgets/button.dart';
 import 'package:supportive_ai/Screens/sign_in/widgets/text_field.dart';
 import 'package:supportive_ai/responsive.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:supportive_ai/services/sharespref.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -26,73 +28,105 @@ class _SignUpState extends State<SignUp> {
   final _genderController = TextEditingController();
   final _birthController = TextEditingController();
 
-  
   // final patient_doctor = TextEditingController();
 
   void _handleRegistration() {
-    final username = _usernameController.text;
-    final password = _passwordController.text;
-    final email = _emailController.text;
-    final userType = _userTypeController.text;
-    final name = _nameController.text;
-    final phone = _phoneNumberController.text;
-    final city = _location_cityController.text;
-    final gender = _genderController.text;
-    final birth = _birthController.text;
+    if (_formKey.currentState!.validate()) {
+      final username = _usernameController.text;
+      final password = _passwordController.text;
+      final email = _emailController.text;
+      final userType = _userTypeController.text;
+      final name = _nameController.text;
+      final phone = _phoneNumberController.text;
+      final city = _location_cityController.text;
+      final gender = _genderController.text;
+      final birth = _birthController.text;
 
-    signUpUser(
-        username, password, name, phone, city, email, birth, gender, userType);
-  }
-  Future<void> signUpUser(
-  String username,
-  String password,
-  String name,
-  String phone,
-  String address,
-  String email,
-  String dob,
-  String gender,
-  String post,
-) async {
-  final url = 'https://supportiveai-api.onrender.com/register-api/';
-
-  final headers = {
-    'Content-type': 'application/json',
-    'Accept': 'application/json',
-  };
-
-  final body = {
-    'username': username,
-    'password': password,
-    'name': name,
-    'phone': phone,
-    'address': address,
-    'email': email,
-    'dob': dob,
-    'gender': gender,
-    'post': post,
-  };
-
-  try {
-    final response = await http.post(
-      Uri.parse(url),
-      headers: headers,
-      body: jsonEncode(body),
-    );
-
-    if (response.statusCode == 201 || response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Register Successfully")));
-      final responseData = jsonDecode(response.body);
-      // Process the response data as needed
-      final token = responseData['token']['access'];
-      print('Signed up successfully! Token: $token');
-    } else {
-      print('Sign up failed. Status code: ${response.statusCode}');
+      signUpUser(
+        username,
+        password,
+        name,
+        phone,
+        city,
+        email,
+        birth,
+        gender,
+        userType,
+      );
     }
-  } catch (e) {
-    print('Error during sign up: $e');
   }
-}
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    _emailController.dispose();
+    _userTypeController.dispose();
+    _nameController.dispose();
+    _phoneNumberController.dispose();
+    _location_cityController.dispose();
+    _genderController.dispose();
+    _birthController.dispose();
+    super.dispose();
+  }
+
+  Future<void> signUpUser(
+    String username,
+    String password,
+    String name,
+    String phone,
+    String address,
+    String email,
+    String dob,
+    String gender,
+    String post,
+  ) async {
+    final url = 'https://supportiveai-api.onrender.com/register-api/';
+
+    final headers = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+    };
+
+    final body = {
+      'username': username,
+      'password': password,
+      'name': name,
+      'phone': phone,
+      'address': address,
+      'email': email,
+      'dob': dob,
+      'gender': gender,
+      'post': post,
+    };
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: jsonEncode(body),
+      );
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        // Process the response data as needed
+        final token = responseData['token']['access'];
+        MySharedPreferences.saveToken(token);
+        print('Signed up successfully! Token: $token');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+                """Check your email. Click on the link to verify your account If your account is verified, continue and login"""),
+          ),
+        );
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => SignIn()));
+      } else {
+        print('Sign up failed. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error during sign up: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -168,11 +202,11 @@ class _SignUpState extends State<SignUp> {
                             return 'Please enter your Email';
                           }
                           // check valid email
-                        //   final regex = RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
-                        //   if(!regex.hasMatch('$_emailController')){
-                        //     return 'Enter a valid Email';
-                        //   }
-                        //   return null;
+                          //   final regex = RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+                          //   if(!regex.hasMatch('$_emailController')){
+                          //     return 'Enter a valid Email';
+                          //   }
+                          //   return null;
                         },
                       ),
                       const SizedBox(height: 5),
@@ -249,11 +283,7 @@ class _SignUpState extends State<SignUp> {
                       const SizedBox(height: 15),
                       // sign in button
                       MyButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              _handleRegistration;
-                            }
-                          },
+                          onPressed: _handleRegistration,
                           child: Text("Sign Up")),
                       const SizedBox(height: 10),
                       GestureDetector(
