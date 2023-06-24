@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:supportive_ai/Screens/home_page/home_page.dart';
 import 'package:supportive_ai/Screens/home_page/profile.dart';
 import 'package:supportive_ai/Screens/home_page/widgets/nav_bar.dart';
 import 'package:supportive_ai/Screens/sign_in/sign_in.dart';
 import 'package:supportive_ai/Screens/sign_up/sign_up.dart';
 // import 'package:supportive_ai/Screens/splash/splash.dart';
-
 import 'Screens/home_page/chat.dart';
+import 'Screens/userScreen/profileuser.dart';
+// import 'Screens/userScreen/appointement.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,6 +24,7 @@ class MyApp extends StatelessWidget {
         'signup': (context) => const SignUp(),
         'signin': (context) => const SignIn(),
         'chat': (context) => ChatBotScreen(),
+        'userprofile/': (context) => ProfileScreen(),
         'profile': (context) => const Profile(),
         'home': (context) => const NavBar(),
       },
@@ -32,7 +35,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      home: const SignIn(),
+      home: SignIn(),
     );
   }
 }

@@ -29,17 +29,18 @@ class _SignInState extends State<SignIn> {
     final String password = _passwordController.text.trim();
 
     final Map<String, String> data = {
-      "email": username,
+      "username": username,
       "password": password,
     };
 
-    final Uri signInUrl = Uri.parse('http://restapi.adequateshop.com/api/authaccount/login');
+    final Uri signInUrl = Uri.parse('https://supportiveai-api.onrender.com/login/');
 
     try {
       final http.Response response = await http.post(
         signInUrl,
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
           // 'X-CSRFToken':'BNGnnfT5i20zqqWuGvsRrExAQCLTK7oLFtVo1XeWcWWgAxY7MWMYqpiWw2xjpU4Z'
         },
         body: json.encode(data),
@@ -55,7 +56,7 @@ class _SignInState extends State<SignIn> {
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomePage(token: token)),
+          MaterialPageRoute(builder: (context) => HomePage()),
         );
       } else {
         // Handle error response

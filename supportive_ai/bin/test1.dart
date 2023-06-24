@@ -2,7 +2,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 Future<void> login(String username, String password) async {
-  final url = Uri.parse('http://127.0.0.1:8000/login/');
+  final url = Uri.parse('http://127.0.0.1:8000/login-api/');
   final headers = {
     'Content-type': 'application/json',
     'Accept': 'application/json',

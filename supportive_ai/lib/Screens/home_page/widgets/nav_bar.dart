@@ -37,7 +37,7 @@ class NavBar extends StatelessWidget {
                 icon: Icons.person,
                 text: 'Profile',
                 onPressed: () {
-                  Navigator.pushNamed(context, 'profile');
+                  Navigator.pushNamed(context, 'userprofile/');
                 },
               ),
             ],

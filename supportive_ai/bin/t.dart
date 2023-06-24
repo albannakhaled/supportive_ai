@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 Future<void> signIn(String username, String password) async {
-  var url = Uri.parse('http://127.0.0.1:8000/login/');
+  var url = Uri.parse('https://supportiveai-api.onrender.com/login/');
   var response = await http.post(
     url,
     headers: {'Content-Type': 'application/json'},
@@ -20,5 +20,5 @@ Future<void> signIn(String username, String password) async {
   }
 }
 void main(){
-  signIn("chadi3", "123");
+  signIn("chadi", "123");
 }
