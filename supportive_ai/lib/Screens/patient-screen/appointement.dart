@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:supportive_ai/Screens/sign_in/widgets/button.dart';
+
+import '../../widget/button.dart';
 
 class AppointmentScreen extends StatefulWidget {
+  const AppointmentScreen({super.key});
+
   @override
   _AppointmentScreenState createState() => _AppointmentScreenState();
 }

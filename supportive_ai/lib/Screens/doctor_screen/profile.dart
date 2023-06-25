@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:supportive_ai/services/sharespref.dart';
-import '../sign_in/sign_in.dart';
+import 'package:supportive_ai/widget/nav_bar.dart';
+
+import '../../services/sharespref.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});

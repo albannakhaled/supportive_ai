@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supportive_ai/Screens/home_page/home_page.dart';
-import 'package:supportive_ai/Screens/home_page/profile.dart';
-import 'package:supportive_ai/Screens/home_page/widgets/nav_bar.dart';
-import 'package:supportive_ai/Screens/sign_in/sign_in.dart';
-import 'package:supportive_ai/Screens/sign_up/sign_up.dart';
-import 'package:supportive_ai/Screens/splash/splash.dart';
+import 'package:supportive_ai/widget/nav_bar.dart';
+import 'Screens/doctor_screen/profile.dart';
 import 'Screens/home_page/chat.dart';
+import 'Screens/sign_in.dart';
+import 'Screens/sign_up.dart';
+import 'Screens/splash.dart';
 
+// shared pref
 SharedPreferences? prefs;
 
 void main() async {
@@ -25,7 +26,7 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   final Widget _screen;
-  const MyApp(this._screen, {Key? key}) : super(key: key); // Fix the constructor signature
+  const MyApp(this._screen, {Key? key}) : super(key: key); 
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +38,6 @@ class MyApp extends StatelessWidget {
         'userprofile/': (context) => Profile(),
         'profile/': (context) => const Profile(),
         'nav/': (context) => const NavBar(),
-        'home-page/': (context) => const HomePage(),
       },
       theme: ThemeData(
         primarySwatch: Colors.purple,

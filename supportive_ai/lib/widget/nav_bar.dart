@@ -9,7 +9,7 @@ class NavBar extends StatelessWidget {
       bottomNavigationBar: Container(
         color: Colors.purple,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
           child: GNav(
             backgroundColor: Colors.purple,
             gap: 8,
@@ -25,14 +25,13 @@ class NavBar extends StatelessWidget {
                 icon: Icons.home,
                 text: 'Home',
                 onPressed: () {
-                  Navigator.pushNamed(context, 'home-page');
                 },
               ),
               GButton(
                 icon: Icons.chat,
                 text: 'Chat',
                 onPressed: () {
-                  Navigator.pushNamed(context, 'chat');
+                  Navigator.pushNamed(context, 'chat/');
                 },
               ),
               GButton(

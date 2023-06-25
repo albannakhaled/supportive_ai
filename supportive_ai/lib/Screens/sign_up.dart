@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:supportive_ai/Screens/sign_in/sign_in.dart';
-import 'package:supportive_ai/Screens/sign_in/widgets/button.dart';
-import 'package:supportive_ai/Screens/sign_in/widgets/text_field.dart';
+import 'package:supportive_ai/Screens/sign_in.dart';
 import 'package:supportive_ai/responsive.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:supportive_ai/services/sharespref.dart';
+
+import '../widget/button.dart';
+import '../widget/text_field.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -288,7 +289,7 @@ class _SignUpState extends State<SignUp> {
                       const SizedBox(height: 10),
                       GestureDetector(
                         onTap: () {
-                          Navigator.pushNamed(context, 'signin');
+                          Navigator.pushNamed(context, 'signin/');
                         },
                         child: const Row(
                           children: [
