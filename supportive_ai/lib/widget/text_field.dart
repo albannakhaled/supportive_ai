@@ -27,7 +27,7 @@ class MyTextField extends StatelessWidget {
         prefixIcon: icon,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(9),
-          borderSide: BorderSide(style: BorderStyle.none),
+          borderSide: const BorderSide(style: BorderStyle.none),
         ),
         fillColor: Colors.grey.shade300,
         filled: true,
@@ -37,7 +37,7 @@ class MyTextField extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(9),
-          borderSide: BorderSide(color: Colors.purple, width: 1.2),
+          borderSide: const BorderSide(color: Colors.purple, width: 1.2),
         ),
         prefixIconColor: Colors.grey,
       ),

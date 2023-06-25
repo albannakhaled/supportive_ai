@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:supportive_ai/Screens/home_page/home_page.dart';
-import 'package:supportive_ai/Screens/sign_in/widgets/button.dart';
-import 'package:supportive_ai/Screens/sign_in/widgets/text_field.dart';
 import 'package:supportive_ai/responsive.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:supportive_ai/services/sharespref.dart';
+
+import '../widget/button.dart';
+import '../widget/text_field.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({Key? key});
@@ -67,26 +68,29 @@ class _SignInState extends State<SignIn> {
       // print(response);
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseBody = json.decode(response.body);
-        
+
         // Save token to shared preferences for later use
         final String token = responseBody['data']['Token'];
         MySharedPreferences.saveToken(token);
 
-        if(responseBody['message']!=null){
+        if (responseBody['message'] != null) {
+          // ignore: use_build_context_synchronously
           ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Verify you're Email"),
-          ),
-        );
+            const SnackBar(
+              content: Text("Verify you're Email"),
+            ),
+          );
         }
+        // ignore: use_build_context_synchronously
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => const HomePage()),
         );
       } else {
         // Handle error response
         print('Sign-in failed: ${response.body}');
         // Display an error message to the user
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("User Name or Password is incorrect"),
@@ -119,7 +123,7 @@ class _SignInState extends State<SignIn> {
         context.height - appbarHeight - MediaQuery.of(context).padding.top;
     final screenWidth = context.width;
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 208, 208, 208),
+      backgroundColor: const Color.fromARGB(255, 208, 208, 208),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(
@@ -167,7 +171,7 @@ class _SignInState extends State<SignIn> {
                       child: MyButton(
                         onPressed: _isLoading ? null : _signIn,
                         child: _isLoading
-                            ? const CircularProgressIndicator()
+                            ? const LinearProgressIndicator()
                             : const Text('Sign In'),
                       ),
                     ),
@@ -188,7 +192,7 @@ class _SignInState extends State<SignIn> {
                         const SizedBox(width: 10),
                         GestureDetector(
                           onTap: () {
-                            Navigator.pushNamed(context, 'signup');
+                            Navigator.pushNamed(context, 'signup/');
                           },
                           child: const Text(
                             "Register Now",

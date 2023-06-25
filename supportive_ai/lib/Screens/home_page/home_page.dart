@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:supportive_ai/Screens/home_page/widgets/nav_bar.dart';
 
-import '../../main.dart';
+import '../../widget/nav_bar.dart';
+
 
 class HomePage extends StatefulWidget {
   // final String token;
