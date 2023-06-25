@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:supportive_ai/Screens/sign_in.dart';
 import 'package:supportive_ai/responsive.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:supportive_ai/services/sharespref.dart';
+import 'package:supportive_ai/widget/dropdownbutton.dart';
 
 import '../widget/button.dart';
 import '../widget/text_field.dart';
 
 class SignUp extends StatefulWidget {
-  const SignUp({super.key});
+  const SignUp({Key? key}) : super(key: key);
 
   @override
   State<SignUp> createState() => _SignUpState();
 }
 
 class _SignUpState extends State<SignUp> {
+  bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
   // text editing controller
   final _usernameController = TextEditingController();
@@ -28,8 +31,6 @@ class _SignUpState extends State<SignUp> {
   final _userTypeController = TextEditingController();
   final _genderController = TextEditingController();
   final _birthController = TextEditingController();
-
-  // final patient_doctor = TextEditingController();
 
   void _handleRegistration() {
     if (_formKey.currentState!.validate()) {
@@ -82,6 +83,17 @@ class _SignUpState extends State<SignUp> {
     String gender,
     String post,
   ) async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    if (!_validateInputs()) {
+      setState(() {
+        _isLoading = false;
+      });
+      return;
+    }
+
     final url = 'https://supportiveai-api.onrender.com/register-api/';
 
     final headers = {
@@ -100,6 +112,7 @@ class _SignUpState extends State<SignUp> {
       'gender': gender,
       'post': post,
     };
+
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -113,19 +126,46 @@ class _SignUpState extends State<SignUp> {
         final token = responseData['token']['access'];
         MySharedPreferences.saveToken(token);
         print('Signed up successfully! Token: $token');
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
-                """Check your email. Click on the link to verify your account If your account is verified, continue and login"""),
+              """Check your email. Click on the link to verify your account If your account is verified, continue and login""",
+            ),
           ),
         );
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => SignIn()));
+        if (responseData['error'] != '') {
+          // ignore: use_build_context_synchronously
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Username already exists'),
+            ),
+          );
+          // ignore: use_build_context_synchronously
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const SignIn()),
+          );
+        }
       } else {
         print('Sign up failed. Status code: ${response.statusCode}');
       }
     } catch (e) {
       print('Error during sign up: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  bool _validateInputs() {
+    if (_formKey.currentState!.validate()) {
+      // All form fields are valid
+      return true;
+    } else {
+      // Some form fields are invalid
+      return false;
     }
   }
 
@@ -135,12 +175,14 @@ class _SignUpState extends State<SignUp> {
         context.height - appbarHeight - MediaQuery.of(context).padding.top;
     final screenWidth = context.width;
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 208, 208, 208),
+      backgroundColor: const Color.fromARGB(255, 208, 208, 208),
       body: SingleChildScrollView(
         child: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(
-                vertical: screenHeight * 0.1, horizontal: screenWidth * 0.1),
+              vertical: screenHeight * 0.1,
+              horizontal: screenWidth * 0.1,
+            ),
             child: SafeArea(
               child: Center(
                 child: Form(
@@ -189,10 +231,8 @@ class _SignUpState extends State<SignUp> {
                           return null;
                         },
                       ),
-
                       const SizedBox(height: 5),
-
-                      //email field
+                      // email field
                       MyTextField(
                         icon: const Icon(Icons.email),
                         controller: _emailController,
@@ -203,11 +243,11 @@ class _SignUpState extends State<SignUp> {
                             return 'Please enter your Email';
                           }
                           // check valid email
-                          //   final regex = RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
-                          //   if(!regex.hasMatch('$_emailController')){
-                          //     return 'Enter a valid Email';
-                          //   }
-                          //   return null;
+                          // final regex = RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+                          // if(!regex.hasMatch(value)){
+                          //   return 'Enter a valid Email';
+                          // }
+                          return null;
                         },
                       ),
                       const SizedBox(height: 5),
@@ -225,7 +265,7 @@ class _SignUpState extends State<SignUp> {
                         },
                       ),
                       const SizedBox(height: 5),
-                      //address field
+                      // address field
                       MyTextField(
                         icon: const Icon(Icons.location_city),
                         controller: _location_cityController,
@@ -239,36 +279,6 @@ class _SignUpState extends State<SignUp> {
                         },
                       ),
                       const SizedBox(height: 5),
-                      // gender field
-
-                      MyTextField(
-                        icon: const Icon(Icons.male_outlined),
-                        controller: _genderController,
-                        hintText: "Gender",
-                        obscureText: false,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter your Gender';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 5),
-                      // user type field
-                      MyTextField(
-                        icon: const Icon(Icons.supervised_user_circle),
-                        controller: _userTypeController,
-                        hintText: "patient or doctor",
-                        obscureText: false,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter your Type';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 5),
-                      //birth field
                       MyTextField(
                         icon: const Icon(Icons.date_range),
                         controller: _birthController,
@@ -280,12 +290,54 @@ class _SignUpState extends State<SignUp> {
                           }
                           return null;
                         },
+                        // date picker
+                        onTap: () async {
+                          DateTime? pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(1950),
+                            lastDate: DateTime(2100),
+                          );
+                          if (pickedDate != null) {
+                            setState(() {
+                              _birthController.text =
+                                  DateFormat('yyyy-MM-dd').format(pickedDate);
+                            });
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 5),
+                      MyDropButton(
+                        selectedValue: _genderController,
+                        labelText: "Gender",
+                        prefixIcon: Icons.male_outlined,
+                        items: ['Male', 'Female'],
+                        onChanged: (value) {
+                          setState(() {
+                            _genderController.text = value!;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 5),
+                      MyDropButton(
+                        selectedValue: _userTypeController,
+                        labelText: "User Type",
+                        prefixIcon: Icons.person_2,
+                        items: ['patient', 'doctor'],
+                        onChanged: (value) {
+                          setState(() {
+                            _userTypeController.text = value!;
+                            print(_userTypeController);
+                          });
+                        },
                       ),
                       const SizedBox(height: 15),
-                      // sign in button
                       MyButton(
-                          onPressed: _handleRegistration,
-                          child: Text("Sign Up")),
+                        onPressed: _isLoading ? null : _handleRegistration,
+                        child: _isLoading
+                            ? const LinearProgressIndicator()
+                            : const Text('Sign Up'),
+                      ),
                       const SizedBox(height: 10),
                       GestureDetector(
                         onTap: () {
@@ -300,8 +352,9 @@ class _SignUpState extends State<SignUp> {
                             Text(
                               "Back to Sign IN",
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blueGrey),
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blueGrey,
+                              ),
                             ),
                           ],
                         ),

@@ -7,6 +7,7 @@ import 'package:supportive_ai/services/sharespref.dart';
 
 import '../widget/button.dart';
 import '../widget/text_field.dart';
+import 'doctor_screen/profile.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({Key? key});
@@ -73,7 +74,7 @@ class _SignInState extends State<SignIn> {
         final String token = responseBody['data']['Token'];
         MySharedPreferences.saveToken(token);
 
-        if (responseBody['message'] != null) {
+        if (responseBody['message'] == '') {
           // ignore: use_build_context_synchronously
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -81,11 +82,17 @@ class _SignInState extends State<SignIn> {
             ),
           );
         }
-        // ignore: use_build_context_synchronously
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
-        );
+        if (responseBody['data']['usertype'] == 'patient') {
+          // ignore: use_build_context_synchronously
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomePage()),
+          );
+        } else {
+          // ignore: use_build_context_synchronously
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => const Profile()));
+        }
       } else {
         // Handle error response
         print('Sign-in failed: ${response.body}');
