@@ -143,6 +143,18 @@ class _SignInState extends State<SignIn> {
                 key: _formKey,
                 child: Column(
                   children: [
+                    //title
+                    const Text(
+                      'Welcome to Supportive Ai',
+                      style: TextStyle(
+                          fontStyle: FontStyle.italic,
+                          fontSize: 24,
+                          color: Colors.purple,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    const SizedBox(
+                      height: 50,
+                    ),
                     // username field
                     MyTextField(
                       icon: const Icon(Icons.person),
