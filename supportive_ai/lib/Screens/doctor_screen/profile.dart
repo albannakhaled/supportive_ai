@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import '../../services/sharespref.dart';
 
-class Profile extends StatefulWidget {
-  const Profile({super.key});
+class Appointment extends StatefulWidget {
+  const Appointment({super.key});
 
   @override
-  State<Profile> createState() => _ProfileState();
+  State<Appointment> createState() => _AppointmentState();
 }
 
-class _ProfileState extends State<Profile> {
+class _AppointmentState extends State<Appointment> {
   final listNames = const ['ahmad', 'khaled', 'ali', 'sami', 'chadi'];
   @override
   Widget build(BuildContext context) {
@@ -154,7 +154,7 @@ class _ProfileState extends State<Profile> {
               ElevatedButton(
                 onPressed: () {
                   MySharedPreferences.saveToken('');
-                  Navigator.pushReplacementNamed(context, 'signin/');
+                  Navigator.pushReplacementNamed(context, 'sign-in/');
                 },
                 style: const ButtonStyle(),
                 child: const Text(

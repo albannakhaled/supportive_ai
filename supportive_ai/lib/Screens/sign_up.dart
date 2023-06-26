@@ -124,14 +124,16 @@ class _SignUpState extends State<SignUp> {
         final token = responseData['token']['access'];
         MySharedPreferences.saveToken(token);
         print('Signed up successfully! Token: $token');
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
                 """Check your email. Click on the link to verify your account If your account is verified, continue and login"""),
           ),
         );
+        // ignore: use_build_context_synchronously
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => SignIn()));
+            context, MaterialPageRoute(builder: (context) => const SignIn()));
       } else {
         print('Sign up failed. Status code: ${response.statusCode}');
       }
@@ -332,7 +334,7 @@ class _SignUpState extends State<SignUp> {
                       const SizedBox(height: 10),
                       GestureDetector(
                         onTap: () {
-                          Navigator.pushNamed(context, 'signin/');
+                          Navigator.pushNamed(context, 'sign-in/');
                         },
                         child: const Row(
                           children: [

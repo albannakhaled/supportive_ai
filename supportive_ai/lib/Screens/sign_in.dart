@@ -91,7 +91,7 @@ class _SignInState extends State<SignIn> {
         } else {
           // ignore: use_build_context_synchronously
           Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const Profile()));
+              MaterialPageRoute(builder: (context) => const Appointment()));
         }
       } else {
         // Handle error response
@@ -145,8 +145,9 @@ class _SignInState extends State<SignIn> {
                   children: [
                     //title
                     const Text(
-                      'Welcome to Supportive Ai',
+                      'Welcome to Bloom',
                       style: TextStyle(
+                          letterSpacing: 1,
                           fontStyle: FontStyle.italic,
                           fontSize: 24,
                           color: Colors.purple,
@@ -211,7 +212,7 @@ class _SignInState extends State<SignIn> {
                         const SizedBox(width: 10),
                         GestureDetector(
                           onTap: () {
-                            Navigator.pushNamed(context, 'signup/');
+                            Navigator.pushNamed(context, 'sign-up/');
                           },
                           child: const Text(
                             "Register Now",
