@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../services/sharespref.dart';
 import '../../widget/button.dart';
 
 class AppointmentScreen extends StatefulWidget {
@@ -56,7 +57,6 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        
         centerTitle: true,
         backgroundColor: Colors.purple,
         title: const Text(
@@ -84,7 +84,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                         onPressed: () {
                           Navigator.popAndPushNamed(context, 'home');
                         },
-                        child: const Text('Done'))
+                        child: const Text('Done')),
                   ],
                 ),
               )
@@ -142,6 +142,21 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
         ElevatedButton(
           onPressed: _submitAppointment,
           child: const Text('Submit Appointment'),
+        ),
+        SizedBox(
+          height: 340,
+        ),
+        ElevatedButton(
+          onPressed: () {
+            MySharedPreferences.saveToken('');
+            Navigator.pushReplacementNamed(context, 'sign-in/');
+          },
+          style: const ButtonStyle(),
+          child: const Text(
+            'Logout',
+            style: TextStyle(
+                fontSize: 16, fontWeight: FontWeight.w600, letterSpacing: 1.5),
+          ),
         ),
       ],
     );

@@ -7,6 +7,7 @@ import 'package:supportive_ai/services/sharespref.dart';
 
 import '../widget/button.dart';
 import '../widget/text_field.dart';
+import 'doctor_screen/profile.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({Key? key});
@@ -73,7 +74,7 @@ class _SignInState extends State<SignIn> {
         final String token = responseBody['data']['Token'];
         MySharedPreferences.saveToken(token);
 
-        if (responseBody['message'] != null) {
+        if (responseBody['message'] == '') {
           // ignore: use_build_context_synchronously
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -81,11 +82,17 @@ class _SignInState extends State<SignIn> {
             ),
           );
         }
-        // ignore: use_build_context_synchronously
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
-        );
+        if (responseBody['data']['usertype'] == 'patient') {
+          // ignore: use_build_context_synchronously
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomePage()),
+          );
+        } else {
+          // ignore: use_build_context_synchronously
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => const Appointment()));
+        }
       } else {
         // Handle error response
         print('Sign-in failed: ${response.body}');
@@ -136,6 +143,19 @@ class _SignInState extends State<SignIn> {
                 key: _formKey,
                 child: Column(
                   children: [
+                    //title
+                    const Text(
+                      'Welcome to Bloom',
+                      style: TextStyle(
+                          letterSpacing: 1,
+                          fontStyle: FontStyle.italic,
+                          fontSize: 24,
+                          color: Colors.purple,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    const SizedBox(
+                      height: 50,
+                    ),
                     // username field
                     MyTextField(
                       icon: const Icon(Icons.person),
@@ -192,7 +212,7 @@ class _SignInState extends State<SignIn> {
                         const SizedBox(width: 10),
                         GestureDetector(
                           onTap: () {
-                            Navigator.pushNamed(context, 'signup/');
+                            Navigator.pushNamed(context, 'sign-up/');
                           },
                           child: const Text(
                             "Register Now",

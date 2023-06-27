@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:supportive_ai/Screens/sign_in.dart';
 import 'package:supportive_ai/responsive.dart';
 import 'package:http/http.dart' as http;
@@ -30,6 +31,7 @@ class _SignUpState extends State<SignUp> {
   final _birthController = TextEditingController();
 
   // final patient_doctor = TextEditingController();
+  bool _isLoading = false;
 
   void _handleRegistration() {
     if (_formKey.currentState!.validate()) {
@@ -82,6 +84,15 @@ class _SignUpState extends State<SignUp> {
     String gender,
     String post,
   ) async {
+    setState(() {
+      _isLoading = true;
+    });
+    if (!_validateInputs()) {
+      setState(() {
+        _isLoading = false;
+      });
+      return;
+    }
     final url = 'https://supportiveai-api.onrender.com/register-api/';
 
     final headers = {
@@ -113,19 +124,35 @@ class _SignUpState extends State<SignUp> {
         final token = responseData['token']['access'];
         MySharedPreferences.saveToken(token);
         print('Signed up successfully! Token: $token');
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
                 """Check your email. Click on the link to verify your account If your account is verified, continue and login"""),
           ),
         );
+        // ignore: use_build_context_synchronously
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => SignIn()));
+            context, MaterialPageRoute(builder: (context) => const SignIn()));
       } else {
         print('Sign up failed. Status code: ${response.statusCode}');
       }
     } catch (e) {
       print('Error during sign up: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  bool _validateInputs() {
+    if (_formKey.currentState!.validate()) {
+      // All form fields are valid
+      return true;
+    } else {
+      // Some form fields are invalid
+      return false;
     }
   }
 
@@ -280,16 +307,34 @@ class _SignUpState extends State<SignUp> {
                           }
                           return null;
                         },
+                        onTap: () async {
+                          DateTime? pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(1950),
+                            lastDate: DateTime(2100),
+                          );
+                          if (pickedDate != null) {
+                            setState(() {
+                              _birthController.text =
+                                  DateFormat('yyyy-MM-dd').format(pickedDate);
+                            });
+                          }
+                        },
                       ),
                       const SizedBox(height: 15),
                       // sign in button
                       MyButton(
-                          onPressed: _handleRegistration,
-                          child: Text("Sign Up")),
+                        onPressed: _isLoading ? null : _handleRegistration,
+                        child: _isLoading
+                            ? const LinearProgressIndicator()
+                            : const Text('Sign Up'),
+                      ),
+
                       const SizedBox(height: 10),
                       GestureDetector(
                         onTap: () {
-                          Navigator.pushNamed(context, 'signin/');
+                          Navigator.pushNamed(context, 'sign-in/');
                         },
                         child: const Row(
                           children: [

@@ -12,7 +12,7 @@ Future<void> signUpUser(
   String gender,
   String post,
 ) async {
-  final url = 'http://127.0.0.1:8000/register/';
+  final url = 'https://supportiveai-api.onrender.com/register-api/';
 
   final headers = {
     'Content-type': 'application/json',

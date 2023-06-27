@@ -1,38 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:supportive_ai/widget/nav_bar.dart';
-
 import '../../services/sharespref.dart';
 
-class Profile extends StatefulWidget {
-  const Profile({super.key});
+class Appointment extends StatefulWidget {
+  const Appointment({super.key});
 
   @override
-  State<Profile> createState() => _ProfileState();
+  State<Appointment> createState() => _AppointmentState();
 }
 
-class _ProfileState extends State<Profile> {
+class _AppointmentState extends State<Appointment> {
   final listNames = const ['ahmad', 'khaled', 'ali', 'sami', 'chadi'];
-  void showDate() {
-    showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2050),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.purple,
-        actions: [
-          IconButton(
-            onPressed: showDate,
-            icon: const Icon(Icons.calendar_month),
-          )
-        ],
         elevation: 1,
       ),
       body: SingleChildScrollView(
@@ -172,7 +154,7 @@ class _ProfileState extends State<Profile> {
               ElevatedButton(
                 onPressed: () {
                   MySharedPreferences.saveToken('');
-                  Navigator.pushReplacementNamed(context, 'signin/');
+                  Navigator.pushReplacementNamed(context, 'sign-in/');
                 },
                 style: const ButtonStyle(),
                 child: const Text(

@@ -17,7 +17,7 @@ class _HomePageState extends State<HomePage> {
     return const Scaffold(
       bottomNavigationBar: NavBar(),
       body: Center(
-        child: Text('fdas'),
+        child: null,
       ),
     );
   }

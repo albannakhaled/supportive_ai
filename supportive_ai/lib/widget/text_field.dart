@@ -6,15 +6,17 @@ class MyTextField extends StatelessWidget {
   final String hintText;
   final bool obscureText;
   final Icon icon;
+  void Function()? onTap;
 
-  MyTextField({
-    Key? key,
-    required this.controller,
-    required this.hintText,
-    required this.obscureText,
-    required this.icon,
-    this.validator,
-  }) : super(key: key);
+  MyTextField(
+      {Key? key,
+      required this.controller,
+      required this.hintText,
+      required this.obscureText,
+      required this.icon,
+      this.validator,
+      this.onTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +43,7 @@ class MyTextField extends StatelessWidget {
         ),
         prefixIconColor: Colors.grey,
       ),
+      onTap: onTap,
     );
   }
 }
