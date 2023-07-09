@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import '../../../responsive.dart';
 
 class MyButton extends StatelessWidget {
-  final  void Function()? onPressed;
-  final String text;
-  const MyButton({super.key, required this.text, this.onPressed});
+  final Widget? child;
+  final void Function()? onPressed;
+  const MyButton({super.key, this.onPressed, this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -23,11 +23,11 @@ class MyButton extends StatelessWidget {
           // surfaceTintColor: Colors.purple, // Text color
           padding: const EdgeInsets.all(16), // Padding around the button
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15), // Rounded corners
+            borderRadius: BorderRadius.circular(9), // Rounded corners
           ),
         ),
         onPressed: onPressed,
-        child: Text(text),
+        child: child,
       ),
     );
   }

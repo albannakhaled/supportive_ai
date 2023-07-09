@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:supportive_ai/Screens/sign_in/sign_in.dart';
+import 'package:supportive_ai/Screens/sign_in.dart';
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -17,11 +19,11 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void navigateToNextScreen() {
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 2), () {
       // Replace 'HomeScreen()' with the screen you want to navigate to after the splash screen
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => SignIn()),
+        MaterialPageRoute(builder: (context) => const SignIn()),
       );
     });
   }

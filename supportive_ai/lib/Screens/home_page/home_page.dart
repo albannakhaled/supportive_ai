@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:supportive_ai/Screens/home_page/widgets/nav_bar.dart';
+
+import '../../widget/nav_bar.dart';
+
 
 class HomePage extends StatefulWidget {
+  // final String token;
   const HomePage({super.key});
 
   @override
@@ -11,9 +14,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       bottomNavigationBar: NavBar(),
-      body: Container(),
+      body: Center(
+        child: null,
+      ),
     );
   }
 }

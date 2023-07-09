@@ -1,48 +1,57 @@
-import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
+Future<void> signUpUser(
+  String username,
+  String password,
+  String name,
+  String phone,
+  String address,
+  String email,
+  String dob,
+  String gender,
+  String post,
+) async {
+  final url = 'https://supportiveai-api.onrender.com/register-api/';
 
-  Future<void> signUpUser(
-    String username,
-    String password,
-    String name,
-    String email,
-    String phoneNumber,
-    String location_city,
-    String patient_doctor,
-    String gender,
-    String birth,) async {
-  var url = Uri.parse('https://supportiveai-api.onrender.com/register/');
-  var body = jsonEncode({
+  final headers = {
+    'Content-type': 'application/json',
+    'Accept': 'application/json',
+  };
+
+  final body = {
     'username': username,
-      'password': password,
-      'name': name,
-      'email': email,
-      'phoneNumber': phoneNumber,
-      'location_city': location_city,
-      'patient_doctor': patient_doctor,
-      'gender': gender,
-      'birth': birth,
-  });
-  var headers = {'Content-Type': 'application/json'};
+    'password': password,
+    'name': name,
+    'phone': phone,
+    'address': address,
+    'email': email,
+    'dob': dob,
+    'gender': gender,
+    'post': post,
+  };
 
   try {
-    var response = await http.post(url, body: body, headers: headers);
+    final response = await http.post(
+      Uri.parse(url),
+      headers: headers,
+      body: jsonEncode(body),
+    );
 
-    if (response.statusCode == 201) {
-      // Signup successful
-      print('Signup successful');
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      final responseData = jsonDecode(response.body);
+      // Process the response data as needed
+      final token = responseData['token']['access'];
+      print('Signed up successfully! Token: $token');
     } else {
-      // Signup failed
-      print('Signup failed with status code: ${response.statusCode}');
-      print('Response body: ${response.body}');
+      print('Sign up failed. Status code: ${response.statusCode}');
     }
   } catch (e) {
-    // Handle any exceptions
-    print('Exception occurred during signup: $e');
+    print('Error during sign up: $e');
   }
 }
 
-void main() async {
-  signUpUser('test2','123qweasdzxc','ahmad','albannakhalil90@gmail.com','0096181812967','akkar','Patient','M','01/01/2011');
+void main()
+{
+  signUpUser('nader', '123', 'name', '123', 'address', 'albannakhail90@gmail.com', '2000-2-2', 'M', 'patient');
 }

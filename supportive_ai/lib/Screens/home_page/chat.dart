@@ -36,10 +36,6 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
       return 'Hi there!';
     } else if (userMessage.toLowerCase().contains('how are you')) {
       return 'I am good, thank you!';
-    } else if (userMessage.toLowerCase().contains('nfe5o')) {
-      return 'mafi 8ayrak byenef5o';
-    } else if (userMessage.toLowerCase().contains('wle 3eb')) {
-      return 'tayyeb ok';
     } else {
       return 'I am sorry, I cannot understand that.';
     }
@@ -76,7 +72,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                       ),
                     ),
                     trailing: message.isUser
-                        ? CircleAvatar(
+                        ? const CircleAvatar(
                             child: Icon(
                               Icons.person,
                               color: Colors.purple,

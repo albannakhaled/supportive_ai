@@ -1,49 +1,37 @@
-import 'dart:convert';
 import 'package:http/http.dart' as http;
-void main()
-{
-  loginUser('test1','123qweasdzxc');
-}
-// void loginUser()async{
-//   var url = Uri.parse('https://supportiveai-api.onrender.com/login/');
-//   var body = jsonEncode({
-//     'username':'test1',
-//     'password':'123qweasdzxcy',
-//   });
-//   var headers = {'Content-Type':'application/json'};
-//   var response = await http.post(url,body:body,headers:headers);
-//   if(response.statusCode == 200){
-//     print("login success");
-//   }else{
-//     print('registration fialed : ${response.statusCode}');
-//     print('response body: ${response.body}');
-//   }
-// }
-Future<void> loginUser(String username, String password) async {
-  var url = Uri.parse('https://supportiveai-api.onrender.com/login/');
-  var body = jsonEncode({
+import 'dart:convert';
+
+Future<void> login(String username, String password) async {
+  final url = Uri.parse('http://127.0.0.1:8000/login-api/');
+  final headers = {
+    'Content-type': 'application/json',
+    'Accept': 'application/json',
+    'Content-Type': 'application/x-www-form-urlencoded',
+    // 'Authorization': 'Bearer $token',
+    // 'X-CSRFToken': 'ghMzXXOybawlKlDp5md46Zz03bdud0g9', // Update the referer URL here
+  };
+
+  final body = {
     'username': username,
     'password': password,
-  });
-  var headers = {'Content-Type': 'application/json'};
+  };
 
-  try {
-    var response = await http.post(url, body: body, headers: headers);
+  final response = await http.post(
+    url,
+    headers: headers,
+    body: body,
+  );
 
-    if (response.statusCode == 200) {
-      // Login successful
-      var responseData = jsonDecode(response.body);
-      print(responseData);
-      // var token = responseData['token'];
-      // Store the token or perform further actions
-      print('Login successful');
-    } else {
-      // Login failed
-      print('Login failed with status code: ${response.statusCode}');
-      print('Response body: ${response.body}');
-    }
-  } catch (e) {
-    // Handle any exceptions
-    print('Exception occurred during login: $e');
+  if (response.statusCode == 200) {
+    final responseData = jsonDecode(response.body);
+    final String token = responseData['data']['Token'];
+
+    print('Logged in successfully! Token: $token');
+  } else {
+    print('Login failed. Status code: ${response.statusCode}');
   }
+}
+
+void main() {
+  login("chadi3", '123');
 }

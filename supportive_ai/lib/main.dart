@@ -1,29 +1,46 @@
 import 'package:flutter/material.dart';
-import 'package:supportive_ai/Screens/home_page/profile.dart';
-import 'package:supportive_ai/Screens/home_page/widgets/nav_bar.dart';
-import 'package:supportive_ai/Screens/sign_in/sign_in.dart';
-import 'package:supportive_ai/Screens/sign_up/sign_up.dart';
-import 'package:supportive_ai/Screens/splash/splash.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supportive_ai/Screens/gard-view.dart';
+import 'package:supportive_ai/Screens/home_page/home_page.dart';
+import 'package:supportive_ai/widget/nav_bar.dart';
+import 'Screens/doctor_screen/profile.dart';
 import 'Screens/home_page/chat.dart';
+import 'Screens/patient-screen/appointement.dart';
+import 'Screens/sign_in.dart';
+import 'Screens/sign_up.dart';
+import 'Screens/splash.dart';
 
-void main() {
-  runApp(const MyApp());
+// shared pref
+SharedPreferences? prefs;
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  prefs = await SharedPreferences.getInstance();
+  var token = prefs!.getString("token");
+  Widget _screen;
+  if (token == null || token.isEmpty) {
+    _screen = const SplashScreen();
+  } else {
+    _screen = const HomePage();
+  }
+  runApp(MyApp(_screen));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final Widget _screen;
+  const MyApp(this._screen, {Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        'signup': (context) => SignUp(),
-        'signin': (context) => SignIn(),
-        'chat': (context) => ChatBotScreen(),
-        'profile': (context) => Profile(),
-        'home': (context) => NavBar(),
+        'sign-up/': (context) => const SignUp(),
+        'sign-in/': (context) => const SignIn(),
+        'chat-bot/': (context) => ChatBotScreen(),
+        'user-appointment/': (context) => const AppointmentScreen(),
+        'doctor-appointment/': (context) => const Appointment(),
+        'nav-bar/': (context) => const NavBar(),
+        'grid-view/': (context) => YouTubeGridView(),
       },
       theme: ThemeData(
         primarySwatch: Colors.purple,
@@ -31,7 +48,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      home: SignUp(),
+      home: _screen,
     );
   }
 }
